@@ -1,4 +1,4 @@
-= RHEL Image Mode microlab
+= RHEL Image Mode
 :page-layout: home
 :!sectids:
 
