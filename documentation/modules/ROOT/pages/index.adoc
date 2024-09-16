@@ -1,4 +1,4 @@
-= Welcome to Template Tutorial
+= RHEL Image Mode microlab
 :page-layout: home
 :!sectids:
 
