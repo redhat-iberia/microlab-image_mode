@@ -2,9 +2,9 @@ runtime:
   cache_dir: ./.cache/antora
 
 site:
-  title: Template Tutorial
-  url: https://redhat-scholars.github.io/course-template
-  start_page: template-tutorial::index.adoc
+  title: RHEL Image Mode microlab
+  url: https://redhat-iberia.github.io/image-mode
+  start_page: image-mode::index.adoc
 
 content:
   sources:
