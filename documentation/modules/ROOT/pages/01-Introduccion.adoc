@@ -1,8 +1,8 @@
 = Introducción a RHEL Image Mode
 include::_attributes.adoc[]
 
-[#prerequisite]
-== Prerequisite CLI tools
+[#bootable]
+== Bootable Containers
 
 include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/prerequisites-kubernetes.adoc[]
 |===
