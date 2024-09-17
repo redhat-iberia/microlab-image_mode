@@ -30,14 +30,3 @@ You can package the next bash script:
 ----
 include::example$run.sh[]
 ----
-
-[#deploy]
-== Deploy the Service
-
-And then you can deploy the service and execute commands inside:
-
-:podname: apps
-
-include::partial$exec_pod.adoc[]
-
-:!podname:
