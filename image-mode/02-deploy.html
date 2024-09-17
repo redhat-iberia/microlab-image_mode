@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Deploy Service :: RHEL Image Mode</title>
     <link rel="canonical" href="https://redhat-iberia.github.io/image-mode/image-mode/02-deploy.html">
-    <link rel="prev" href="#01-introduccion.adoc#minikube">
+    <link rel="prev" href="#01-introduccion.adoc#bootable">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -57,9 +57,6 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#01-introduccion.adoc#bootable">Bootable Containers</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#01-introduccion.adoc#minikube">Setup Minikube</a>
-  </li>
 </ul>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
@@ -68,9 +65,6 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#package">Build Service</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#deploy">Deploy Dervice</a>
   </li>
 </ul>
   </li>
@@ -132,50 +126,8 @@ echo "Hello World"</code></pre>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="deploy"><a class="anchor" href="#deploy"></a>Deploy the Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>And then you can deploy the service and execute commands inside:</p>
-</div>
-<div class="paragraph">
-<p>Check that the pod is up and running:</p>
-</div>
-<div class="listingblock lines_space console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                        READY   STATUS    RESTARTS   AGE
-apps   1/1     Running   0          5s</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then let&#8217;s go into the running pod to execute some commands:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec -ti apps /bin/bash</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Change the pod name with your pod name.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
 <nav class="pagination">
-  <span class="prev"><a href="#01-introduccion.adoc#minikube">Setup Minikube</a></span>
+  <span class="prev"><a href="#01-introduccion.adoc#bootable">Bootable Containers</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
