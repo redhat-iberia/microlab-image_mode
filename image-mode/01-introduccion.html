@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>RHEL Image Mode :: RHEL Image Mode</title>
-    <link rel="canonical" href="https://redhat-iberia.github.io/image-mode/image-mode/index.html">
-    <link rel="next" href="01-introduccion.html">
+    <title>Introducción a RHEL Image Mode :: RHEL Image Mode</title>
+    <link rel="canonical" href="https://redhat-iberia.github.io/image-mode/image-mode/01-introduccion.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="02-deploy.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -50,12 +51,12 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="01-introduccion.html">1. Introducción</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-introduccion.html#bootable">Bootable Containers</a>
+    <a class="nav-link" href="#bootable">Bootable Containers</a>
   </li>
 </ul>
   </li>
@@ -79,57 +80,42 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">RHEL Image Mode</a></li>
+    <li><a href="01-introduccion.html">1. Introducción</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/redhat-iberia/microlab-image_mode/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/redhat-iberia/microlab-image_mode/edit/master/documentation/modules/ROOT/pages/01-introduccion.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">RHEL Image Mode</h1>
-<div class="sect1 text-center strong">
-<h2>Resumen</h2>
+<h1 class="page">Introducción a RHEL Image Mode</h1>
+<div class="sect1">
+<h2 id="bootable"><a class="anchor" href="#bootable"></a>Bootable Containers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Microlab de RHEL Image Mode para Summit Connect Madrid 2024</p>
+<p>Bootable containers o <strong>bootc</strong> es una herramienta que se utiliza para crear contenedores que incluyen el kernel, el cargador de arranque u otros componentes que no se incluyen en los contenedores normalmente. Una vez creado un contenedor de este tipo, se sube a un registry, al igual que cualquier contenedor y mediante <strong>image builder</strong> podemos crear imágnenes de RHEL que se desplegarán sobre cualquier infraestructura, máquinas físicas, virtuales o en proveedores cloud.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/containervsbootc.png" alt="containervsbootc">
+</div>
 </div>
 <div class="paragraph">
-<p>RHEL image mode para Red Hat Enterprise Linux (RHEL) es un nuevo método de despliegue que utiliza una aproximación de contenedores para gestionar el sistema operativo mediante contenedores.</p>
+<p>Esta nueva forma de gestonar el sistema operativo también permite actualizar dichos componentes a partir de imágenes de contenedores bootables.</p>
 </div>
-<div class="paragraph">
-<p>Actualmente se encuentra como Technology Preview, es decir que no está soportado para producción, pero se puede empezar a utilizar para irse familiarizando con image mode y ver no solo como encaja sino también que soluciones ofrece a los clientes sobre las problematicas que sufren hoy en día.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/bootcnutshell.png" alt="bootcnutshell">
 </div>
-<div class="paragraph">
-<p>RHEL image mode sigue una metodología GitOps y CI/CD para gestionar desde las aplicaciones desplegadas hasta el propio sistema operativo.</p>
-</div>
-</div>
-</div>
-<div class="sect1 tiles browse">
-<h2>Browse modules</h2>
-<div class="sectionbody">
-<div class="ulist tile">
-<div class="title"><a href="01-introduccion.html" class="xref page">Get Started</a></div>
-<ul>
-<li>
-<p><a href="01-introduccion.html#minikube" class="xref page">Minikube</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist tile">
-<div class="title"><a href="02-deploy.html" class="xref page">Deploying</a></div>
-<ul>
-<li>
-<p><a href="02-deploy.html#package" class="xref page">Package the Application</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="01-introduccion.html">1. Introducción</a></span>
+  <span class="prev"><a href="index.html">RHEL Image Mode</a></span>
+  <span class="next"><a href="02-deploy.html">2. Deploy Service</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
