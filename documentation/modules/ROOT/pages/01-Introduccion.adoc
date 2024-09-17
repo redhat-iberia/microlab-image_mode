@@ -6,8 +6,8 @@ include::_attributes.adoc[]
 
 Bootable containers o **bootc** es una herramienta que se utiliza para crear contenedores que incluyen el kernel, el cargador de arranque u otros componentes que no se incluyen en los contenedores normalmente. Una vez creado un contenedor de este tipo, se sube a un registry, al igual que cualquier contenedor y mediante **image builder** podemos crear imágnenes de RHEL que se desplegarán sobre cualquier infraestructura, máquinas físicas, virtuales o en proveedores cloud.
 
-images::containervsbootc.png[]
-
+image::containervsbootc.png[]
+       
 Esta nueva forma de gestonar el sistema operativo también permite actualizar dichos componentes a partir de imágenes de contenedores bootables.
 
-images::bootcnutshell.png[]
+image::bootcnutshell.png[]
