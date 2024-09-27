@@ -21,9 +21,8 @@ RHEL image mode sigue una metodología GitOps y CI/CD para gestionar desde las a
 * xref:01-introduccion.adoc#minikube[Minikube]
 
 [.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
+.xref:02-deploy.adoc[2. Deploy Service]
+* xref:02-deploy.adoc#package[Build Service]
 
 [.tile]
 .xref:03-resources.adoc[Recursos]
-* xref:02-deploy.adoc#package[Package the Application]
