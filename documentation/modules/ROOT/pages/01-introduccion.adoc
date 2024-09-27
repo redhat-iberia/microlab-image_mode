@@ -11,3 +11,5 @@ image::containervsbootc.png[]
 Esta nueva forma de gestonar el sistema operativo también permite actualizar dichos componentes a partir de imágenes de contenedores bootables.
 
 image::bootcnutshell.png[]
+
+Bootable containers son contenedores que implementan el estándar de OCI para construir un contenedor con incluye el sistema operativo junto con el kernel. Todo esto se hace utilizando las herramientas ya existente para construir contenedores, como podman.

@@ -1,0 +1,4 @@
+= Recursos sobre RHEL Image Mode
+include::_attributes.adoc[]
+
+* https://developers.redhat.com/articles/2024/09/24/bootc-getting-started-bootable-containers#get_started_with_bootc_with_video_demos[bootc: Getting started with bootable containers]
