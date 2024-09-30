@@ -1,4 +1,5 @@
 = Recursos sobre RHEL Image Mode
 include::_attributes.adoc[]
 
+* https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/index[Using image mode for RHEL to build, deploy, and manage operating systems]
 * https://developers.redhat.com/articles/2024/09/24/bootc-getting-started-bootable-containers#get_started_with_bootc_with_video_demos[bootc: Getting started with bootable containers]
