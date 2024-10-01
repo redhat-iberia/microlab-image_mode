@@ -8,8 +8,8 @@ Bootable containers o **bootc** es una herramienta que se utiliza para crear con
 
 image::containervsbootc.png[]
        
-Esta nueva forma de gestonar el sistema operativo también permite actualizar dichos componentes a partir de imágenes de contenedores bootables.
+Esta nueva forma de gestionar el sistema operativo también permite actualizar dichos componentes a partir de imágenes de contenedores bootables.
 
 image::bootcnutshell.png[]
 
-Bootable containers son contenedores que implementan el estándar de OCI para construir un contenedor con incluye el sistema operativo junto con el kernel. Todo esto se hace utilizando las herramientas ya existentes para construir contenedores, como podman.
+Bootable containers son contenedores que implementan el estándar de OCI para construir un contenedor que incluye el sistema operativo junto con el kernel. Todo esto se hace utilizando las herramientas ya existentes para construir contenedores, como https://www.redhat.com/en/topics/containers/what-is-podman[podman].

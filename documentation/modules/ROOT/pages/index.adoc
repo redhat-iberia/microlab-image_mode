@@ -9,20 +9,22 @@ Microlab de RHEL Image Mode para Summit Connect Madrid 2024
 
 RHEL image mode para Red Hat Enterprise Linux (RHEL) es un nuevo método de despliegue que utiliza una aproximación de contenedores para gestionar el sistema operativo mediante contenedores.
 
-Actualmente se encuentra como Technology Preview, es decir que no está soportado para producción, pero se puede empezar a utilizar para irse familiarizando con image mode y ver no solo como encaja sino también que soluciones ofrece a los clientes sobre las problematicas que sufren hoy en día.
+Actualmente se encuentra como Technology Preview, es decir que no está soportado para producción, pero se puede empezar a utilizar para irse familiarizando con image mode y ver no solo como encaja sino también qué soluciones ofrece a los clientes sobre las problematicas que sufren hoy en día.
 
 RHEL image mode sigue una metodología GitOps y CI/CD para gestionar desde las aplicaciones desplegadas hasta el propio sistema operativo.
 
 [.tiles.browse]
-== Browse modules
+== Contenido
 
 [.tile]
-.xref:01-introduccion.adoc[Get Started]
-* xref:01-introduccion.adoc#minikube[Minikube]
+.xref:01-introduccion.adoc[1. Introducción]
+* xref:01-introduccion.adoc#bootable[Bootable Containers]
 
 [.tile]
-.xref:02-deploy.adoc[2. Deploy Service]
-* xref:02-deploy.adoc#package[Build Service]
+.xref:02-caso-practico.adoc[2. Caso Práctico]
+* xref:02-caso-practico.adoc#descripcion[Actualizaciones automáticas]
+* xref:02-caso-practico.adoc#crear-images[Crear imágenes]
+* xref:02-caso-practico.adoc#update-rollback[Actualizar y revertir]
 
 [.tile]
 .xref:03-resources.adoc[Recursos]
