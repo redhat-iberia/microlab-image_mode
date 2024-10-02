@@ -108,7 +108,7 @@
 <p>En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.</p>
 </div>
 <div class="paragraph">
-<p>Veremo cómo bootc aprovecha la tecnología de contenedores existente para</p>
+<p>Veremos cómo bootc aprovecha la tecnología de contenedores existente para</p>
 </div>
 <div class="ulist">
 <ul>
@@ -131,9 +131,9 @@
 <div class="paragraph">
 <p>La definición de un contenedor es prácticamente igual que la de un contenedor tradicional, lo que cambia es la cláusula <code>FROM</code>.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>FROM quay.io/centos-bootc/centos-bootc:stream9</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -146,27 +146,27 @@
 <p>Para nuestro caso práctico vamos a crear un sistema con el temporizador comprobando si existen actualizaciones cada 30 segundos. Para esto sobreescribimos
 el temporizador en el momento de la creación de la imagen. Usamos la Containerfile:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>FROM quay.io/centos-bootc/centos-bootc:stream9
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
-RUN echo v1 &gt; /version</pre>
+RUN echo v1 &gt; /version</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Creamos el contenedor por ejemplo con podman:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>podman build -t &lt;registry&gt;/demo:latest .</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">podman build -t &lt;registry&gt;/demo:latest .</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Aquí, <code>&lt;registry&gt;</code> es el dominio de nuestro registro de imágenes. Después de crear la imágen, la subimos al registro:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>podman image push &lt;registry&gt;/demo:latest</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">podman image push &lt;registry&gt;/demo:latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -182,11 +182,11 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 <div class="paragraph">
 <p>El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo <code>config.toml</code> para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a>.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre># mkdir output
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># mkdir output
 # cat config.toml
-[[customizations.user]]
+<a id="customizations.user"></a>
 name = "alice"
 password = "bob"
 groups = ["wheel"]
@@ -201,16 +201,16 @@ groups = ["wheel"]
     -v $(pwd)/output:/output \
     quay.io/centos-bootc/bootc-image-builder:latest \
     --type qcow2 \
-    &lt;registry&gt;/demo:latest</pre>
+    &lt;registry&gt;/demo:latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>We then move the VM image file to file that&#8217;s accessible by libvirt and import it.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre># qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on ./output/qcow2/disk.qcow2 /var/lib/libvirt/images/disk.qcow2
-# virt-install --name vm --os-variant rhel-unknown --memory 2048 --vcpus 2 --nographics --import --disk /var/lib/libvirt/images/disk.qcow2</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on ./output/qcow2/disk.qcow2 /var/lib/libvirt/images/disk.qcow2
+# virt-install --name vm --os-variant rhel-unknown --memory 2048 --vcpus 2 --nographics --import --disk /var/lib/libvirt/images/disk.qcow2</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -228,33 +228,33 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 <div class="paragraph">
 <p>Después de hacer log-in en la máquina comprobamos que el temporizador está activo:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre># sudo systemctl status bootc-fetch-apply-updates.timer</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># sudo systemctl status bootc-fetch-apply-updates.timer</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>En lo que sigue, vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistems se autoactualice. Observaremos en una consola el estado del servicio:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre># sudo journalctl -f -u bootc-fetch-apply-updates
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># sudo journalctl -f -u bootc-fetch-apply-updates
 Oct 01 16:05:54 localhost.localdomain systemd[1]: Starting Apply bootc updates...
 Oct 01 16:05:54 localhost.localdomain bootc[1179]: Fetching ostree-unverified-registry:&lt;registry&gt;/demo:latest
 Oct 01 16:05:54 localhost.localdomain bootc[1179]: No changes in &lt;registry&gt;/demo:latest =&gt; sha256:40106b8d8e453901b78398c819a6b95f4d7b55a28b8783d8e19e276197f2f814
 Oct 01 16:05:54 localhost.localdomain bootc[1179]: No update available.
 Oct 01 16:05:54 localhost.localdomain systemd[1]: bootc-fetch-apply-updates.service: Deactivated successfully.
-Oct 01 16:05:54 localhost.localdomain systemd[1]: Finished Apply bootc updates.</pre>
+Oct 01 16:05:54 localhost.localdomain systemd[1]: Finished Apply bootc updates.</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>En otra consola, cambiamos la Containerfile</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>FROM quay.io/centos-bootc/centos-bootc:stream9
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
-RUN echo v2 &gt; /version</pre>
+RUN echo v2 &gt; /version</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -266,46 +266,49 @@ RUN echo v2 &gt; /version</pre>
 <div class="paragraph">
 <p>Veremos, cómo el servicio <code>bootc-fetch-apply-updates</code> encuentra la actualización, descarga los datos y reinicia el sistema.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>Oct 01 16:07:29 localhost.localdomain systemd[1]: Starting Apply bootc updates...
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Oct 01 16:07:29 localhost.localdomain systemd[1]: Starting Apply bootc updates...
 Oct 01 16:07:29 localhost.localdomain bootc[1206]: Fetching ostree-unverified-registry:&lt;registry&gt;/demo:latest
 Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
-Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)</pre>
+Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>$ sudo cat /version
-v2</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo cat /version
+v2</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><code>bootc</code> si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>$ sudo bootc rollback</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo bootc rollback</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>El sistema reiniciará y veremos que nos encontramos en la versión previa:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>$ sudo cat /version
-v1</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo cat /version
+v1
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador</p>
 </div>
-<div class="literalblock">
+<div class="listingblock lines_7 console-input">
 <div class="content">
-<pre>$ sudo systemctl disable --now bootc-fetch-apply-updates.timer</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
 </div>
 </div>
 <div class="paragraph">
