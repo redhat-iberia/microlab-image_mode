@@ -13,3 +13,8 @@ Esta nueva forma de gestionar el sistema operativo también permite actualizar d
 image::bootcnutshell.png[]
 
 Bootable containers son contenedores que implementan el estándar de OCI para construir un contenedor que incluye el sistema operativo junto con el kernel. Todo esto se hace utilizando las herramientas ya existentes para construir contenedores, como https://www.redhat.com/en/topics/containers/what-is-podman[podman].
+
+[IMPORTANT]
+----
+RHEL Image Mode se encuentra actualmente disponible en RHEL 9.4 como Technology Preview (TP), lo que significa que no esta listo para su uso en producción pero puede usarse para ir familiarizándose con la tecnología para que cuando pase a General Availability (GA) los clientes que lo consideren útil puedan empezar a usarlo desde el primer momento al ya conocer la tecnología.
+----
