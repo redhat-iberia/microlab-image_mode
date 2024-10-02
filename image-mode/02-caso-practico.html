@@ -133,11 +133,11 @@
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM registry.redhat.io/rhel9/rhel-bootc:9.4</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>En nuestro ejemplo simplemente creamos un contenedor que crea un archivo para que podamos comprobar los cambios cuando se actualiza y se revierte.</p>
+<p>En nuestro ejemplo simplemente crearemos un contenedor que intala y configura un servidor apache para servir contenido mediante el protocolo HTTPS.</p>
 </div>
 <div class="paragraph">
 <p>Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y aplicarlas.</p>
@@ -148,9 +148,17 @@ el temporizador en el momento de la creación de la imagen. Usamos la Containerf
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM registry.redhat.io/rhel9/rhel-bootc:9.4
+RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es &amp;&amp; /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf &amp;&amp; /usr/bin/systemctl enable httpd
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
-RUN echo v1 &gt; /version</code></pre>
+COPY index.php /var/www/html
+COPY httpd.key /etc/pki/tls/private/
+COPY httpd.crt /etc/pki/tls/certs/
+COPY cacert.pem /etc/pki/tls/certs/
+COPY ssl.conf /etc/httpd/conf.d/
+COPY public.xml /etc/firewalld/zones/
+EXPOSE 443
+CMD [ "/sbin/init" ]</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -186,19 +194,14 @@ $</code></pre>
 </table>
 </div>
 <div class="paragraph">
-<p>Creamos el contenedor por ejemplo con podman:</p>
+<p>Abrimos una terminal y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>bastion.lab.example.com</strong> y creamos el contedor utilizando podman:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">podman build -t &lt;registry&gt;/demo:latest .</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Aquí, <code>&lt;registry&gt;</code> es el dominio de nuestro registro de imágenes. Después de crear la imágen, la subimos al registro:</p>
-</div>
-<div class="listingblock lines_7 console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">podman image push &lt;registry&gt;/demo:latest</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ ssh <a href="mailto:demouser@bastion.lab.example.com">demouser@bastion.lab.example.com</a>
+$ sudo su -
+# cd image-mode
+image-mode # podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -217,23 +220,21 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># mkdir output
-# cat config.toml
-<a id="customizations.user"></a>
-name = "alice"
-password = "bob"
+image-mode # cat config.toml
+<a id="blueprint.customizations.user"></a>
+name = "demouser"
+password = "redhat123"
+key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB/gDV9P3koGgKo8ODo/GNJNy2cBQj0t8wthy2FOgZOBnLBO3V0FPzpPq8zishevoShBrEv/W4+hbjqwhKZEps542yv2QD3pfHjQJmZmciQTf1GSrKMw20UoaPfctzDKJzwcFt3nEN3ZCG473fyjde/et8+CXP+RkZM1Tb2Vl8SRdzdv9EA91/tmqzFU2HvC1sPvFMqFkUXjtrff37jcSiQWmD7AbgAqbtDdNxS1StkRfe0ktR/F2YdgadVZHuvJwKlfdCxawhD82OImZbXHd6/dYB5F6B5qEMUd+19/IV6eg8/oXImlZttr8tk0T9oZQnY6WEAWft6R4qMoDik1cWKY5SxyUx8pFG+br/tgCuDACx9AgEejbVUQWnAxTQktadWs023rwLanoDOTXF0FJg3Dxnq4r336h/MP2u7ita3TKsZDbDFbwuRfj9yPjxFBC7TmGMUjKWC2TPNuBR7tPQsgGbgWclmn2l1eDt2ObMRbaHZs5Q0xfeMfKdcmN0OcvrHRX9fssY8HxZL18QvdgXCUFyisq9nLN5YxhUWU0zHyCfULxR9xiVKwHdQ4aUzgN5FAgLzPMhHxamoIZgoT5Ko4cbuECcH5Pf5K8Jw5/FzWNCjfHokOue2kIVkUczre/T9E2YmlfhQDcDaiEkpzI8Vctmk0IiATVgEUf7z3+y+w== jadebustos@archimedes"
 groups = ["wheel"]
 
-# podman run \
-    --rm \
-    -it \
-    --privileged \
-    --pull=newer \
-    --security-opt label=type:unconfined_t \
-    -v $(pwd)/config.toml:/config.toml:ro \
-    -v $(pwd)/output:/output \
-    quay.io/centos-bootc/bootc-image-builder:latest \
-    --type qcow2 \
-    &lt;registry&gt;/demo:latest</code></pre>
+image-mode # cat creating-vm.sh
+#!/bin/bash
+
+podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
+           -v $(pwd)/config.toml:/config.toml:ro -v $(pwd)/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
+           registry.redhat.io/rhel9/bootc-image-builder:latest \
+           --type qcow2 --local registry.melmac.univ:5000/rhel-bootc-vm:v1
+#</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -329,10 +330,7 @@ v2</code></pre>
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo cat /version
-v1
-[.lines_7]
-[.console-input]
-[source,bash,subs="+macros,+attributes"]</code></pre>
+v1</code></pre>
 </div>
 </div>
 <div class="paragraph">
