@@ -6,7 +6,7 @@ include::_attributes.adoc[]
 
 En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.
 
-Veremo cómo bootc aprovecha la tecnología de contenedores existente para
+Veremos cómo bootc aprovecha la tecnología de contenedores existente para
 
 * crear al aplicación en términos de su contenedor en tiempo de creación - el sistema no se cambia una vez desplegado
 * acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema
@@ -17,9 +17,13 @@ Veremo cómo bootc aprovecha la tecnología de contenedores existente para
 
 La definición de un contenedor es prácticamente igual que la de un contenedor tradicional, lo que cambia es la cláusula `+FROM+`.
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 FROM quay.io/centos-bootc/centos-bootc:stream9
-....
+----
 
 En nuestro ejemplo simplemente creamos un contenedor que crea un archivo para que podamos comprobar los cambios cuando se actualiza y se revierte.
 
@@ -28,23 +32,34 @@ Bootc viene instalado en esas imágenes junto con un temporizador que periódica
 Para nuestro caso práctico vamos a crear un sistema con el temporizador comprobando si existen actualizaciones cada 30 segundos. Para esto sobreescribimos
 el temporizador en el momento de la creación de la imagen. Usamos la Containerfile:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 FROM quay.io/centos-bootc/centos-bootc:stream9
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
 RUN echo v1 > /version
-....
+----
 
 Creamos el contenedor por ejemplo con podman:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 podman build -t <registry>/demo:latest .
-....
+----
 
 Aquí, `+<registry>+` es el dominio de nuestro registro de imágenes. Después de crear la imágen, la subimos al registro:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 podman image push <registry>/demo:latest
-....
+----
 
 En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.
 
@@ -55,7 +70,11 @@ Aquí vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-imag
 
 El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo `+config.toml+` para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en https://github.com/osbuild/bootc-image-builder[bootc-image-builder].
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 # mkdir output
 # cat config.toml
 [[customizations.user]]
@@ -74,14 +93,18 @@ groups = ["wheel"]
     quay.io/centos-bootc/bootc-image-builder:latest \
     --type qcow2 \
     <registry>/demo:latest
-....
+----
 
 We then move the VM image file to file that's accessible by libvirt and import it.
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 # qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on ./output/qcow2/disk.qcow2 /var/lib/libvirt/images/disk.qcow2
 # virt-install --name vm --os-variant rhel-unknown --memory 2048 --vcpus 2 --nographics --import --disk /var/lib/libvirt/images/disk.qcow2
-....
+----
 
 We can now log in and explore the system.
 
@@ -93,13 +116,20 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 
 Después de hacer log-in en la máquina comprobamos que el temporizador está activo:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+
 # sudo systemctl status bootc-fetch-apply-updates.timer
-.... 
+----
 
 En lo que sigue, vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistems se autoactualice. Observaremos en una consola el estado del servicio:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 # sudo journalctl -f -u bootc-fetch-apply-updates
 Oct 01 16:05:54 localhost.localdomain systemd[1]: Starting Apply bootc updates...
 Oct 01 16:05:54 localhost.localdomain bootc[1179]: Fetching ostree-unverified-registry:<registry>/demo:latest
@@ -107,14 +137,18 @@ Oct 01 16:05:54 localhost.localdomain bootc[1179]: No changes in <registry>/demo
 Oct 01 16:05:54 localhost.localdomain bootc[1179]: No update available.
 Oct 01 16:05:54 localhost.localdomain systemd[1]: bootc-fetch-apply-updates.service: Deactivated successfully.
 Oct 01 16:05:54 localhost.localdomain systemd[1]: Finished Apply bootc updates.
-....
+----
 
 En otra consola, cambiamos la Containerfile
-....
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 FROM quay.io/centos-bootc/centos-bootc:stream9
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
 RUN echo v2 > /version
-....
+----
 
 identificando esta nueva version en el archivo `+/version+`.
 
@@ -122,38 +156,56 @@ Seguimos los mismos pasos como en <<crear-images>>.
 
 Veremos, cómo el servicio `+bootc-fetch-apply-updates+` encuentra la actualización, descarga los datos y reinicia el sistema.
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 Oct 01 16:07:29 localhost.localdomain systemd[1]: Starting Apply bootc updates...
 Oct 01 16:07:29 localhost.localdomain bootc[1206]: Fetching ostree-unverified-registry:<registry>/demo:latest
 Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
 Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
-....
+----
 
 Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 $ sudo cat /version
 v2
-....
+----
 
 `+bootc+` si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 $ sudo bootc rollback
-....
+----
 
 El sistema reiniciará y veremos que nos encontramos en la versión previa:
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 $ sudo cat /version
 v1
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 
 Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador
 
-....
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
 $ sudo systemctl disable --now bootc-fetch-apply-updates.timer
-....
+----
 
 Como hemos visto, `+bootc+` integra bien con herramientas existentes de contenedores. Esto significa que también disponemos de https://github.com/fedora-iot/greenboot[greenboot]
 para que revertir automáticamente un sistema que no inicie bien después de una actualización.
