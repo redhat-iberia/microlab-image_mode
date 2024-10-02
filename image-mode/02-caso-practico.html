@@ -108,18 +108,18 @@
 <p>En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.</p>
 </div>
 <div class="paragraph">
-<p>Veremos cómo bootc aprovecha la tecnología de contenedores existente para</p>
+<p>Veremos cómo bootc aprovecha la tecnología de contenedores existente para:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>crear al aplicación en términos de su contenedor en tiempo de creación - el sistema no se cambia una vez desplegado</p>
+<p>Crear al aplicación en términos de su contenedor en tiempo de creación - el sistema no se cambia una vez desplegado.</p>
 </li>
 <li>
-<p>acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema</p>
+<p>Acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema.</p>
 </li>
 <li>
-<p>revertir el último cambio</p>
+<p>Revertir el último cambio.</p>
 </li>
 </ul>
 </div>
@@ -152,6 +152,38 @@ el temporizador en el momento de la creación de la imagen. Usamos la Containerf
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
 RUN echo v1 &gt; /version</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cat bootc-fetch-apply-updates.timer
+[Unit]
+Description=Apply bootc updates
+Documentation=man:bootc(8)
+ConditionPathExists=/run/ostree-booted
+
+[Timer]
+OnBootSec=30seconds
+# This time is relatively arbitrary and obviously expected to be overridden/changed
+OnUnitActiveSec=30seconds
+OnUnitInactiveSec=30seconds
+# When deploying a large number of systems, it may be beneficial to increase this value to help with load on the registry.
+RandomizedDelaySec=5seconds
+
+[Install]
+WantedBy=timers.target
+$</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Creamos el contenedor por ejemplo con podman:</p>
