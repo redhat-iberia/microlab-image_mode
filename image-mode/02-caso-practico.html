@@ -137,7 +137,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>En nuestro ejemplo simplemente crearemos un contenedor que intala y configura un servidor apache para servir contenido mediante el protocolo HTTPS.</p>
+<p>En nuestro ejemplo simplemente crearemos un contenedor que instala y configura un servidor apache para servir contenido mediante el protocolo HTTPS.</p>
 </div>
 <div class="paragraph">
 <p>Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y aplicarlas.</p>
@@ -151,6 +151,7 @@ el temporizador en el momento de la creación de la imagen. Usamos la Containerf
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM registry.redhat.io/rhel9/rhel-bootc:9.4
 RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es &amp;&amp; /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf &amp;&amp; /usr/bin/systemctl enable httpd
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
+COPY motd /etc/motd.d/
 COPY index.php /var/www/html
 COPY httpd.key /etc/pki/tls/private/
 COPY httpd.crt /etc/pki/tls/certs/
@@ -225,7 +226,7 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># mkdir output
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@bastion ~]#  mkdir output
 image-mode # cat config.toml
 <a id="blueprint.customizations.user"></a>
 name = "demouser"
@@ -233,7 +234,7 @@ password = "redhat123"
 key = "ssh-rsa ...."
 groups = ["wheel"]
 
-image-mode # cat creating-vm.sh
+[root@bastion image-mode]#  cat creating-vm.sh
 #!/bin/bash
 
 podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
@@ -241,7 +242,7 @@ podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfin
            -v /var/lib/containers/storage:/var/lib/containers/storage \
            registry.redhat.io/rhel9/bootc-image-builder:latest \
            --type qcow2 --local registry.melmac.univ:5000/rhel-bootc-vm:v1
-#</code></pre>
+[root@bastion image-mode]#</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -274,7 +275,7 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 </div>
 </div>
 <div class="paragraph">
-<p>En lo que sigue, vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistems se autoactualice. Observaremos en una consola el estado del servicio:</p>
+<p>En lo que sigue, vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice. Observaremos en una consola el estado del servicio:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
