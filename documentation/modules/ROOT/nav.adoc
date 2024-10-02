@@ -1,7 +1,10 @@
 * xref:01-introduccion.adoc[1. Introducción]
 ** xref:01-introduccion.adoc#bootable[Bootable Containers]
 
-* xref:02-deploy.adoc[2. Deploy Service]
-** xref:02-deploy.adoc#package[Build Service]
+* xref:02-caso-practico.adoc[2. Caso Práctico]
+** xref:02-caso-practico.adoc#descripcion[Actualizaciones automáticas]
+** xref:02-caso-practico.adoc#crear-images[Crear imágenes]
+** xref:02-caso-practico.adoc#update-rollback[Actualizar y revertir]
+
 
 * xref:03-resources.adoc[Recursos]
