@@ -80,15 +80,21 @@ Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al hos
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-$ ssh demouser@bastion.lab.example.com
-$ sudo su -
-# cd image-mode
-image-mode # podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
+[imagemode@workstation ~]$ ssh demouser@bastion.lab.example.com
+[demouser@bastion ~]$ sudo su -
+[root@bastion ~]# cd image-mode
+[root@bastion ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
+...
+[root@bastion ~]# podman images
+REPOSITORY                                    TAG         IMAGE ID      CREATED            SIZE
+localhost/rhel-bootc-vm                       v1          cc3e1af1b6a6  2 minutes ago     1.75 GB
+...
+[root@bastion ~]# 
 ----
 
 En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.
 
-Podemos crear sistemas de varias maneras: con imágines para máquinas virtuales o también creando DVDs (ISO) que podemos utilizar para automáticamente instalar
+Podemos crear sistemas de varias maneras: con imágenes para máquinas virtuales o también creando DVDs (ISO) que podemos utilizar para automáticamente instalar
 un servidor baremetal con https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/automatically_installing_rhel/automated-installation-workflow_rhel-installer#automated-installation-workflow_rhel-installer[kickstart].
 
 Aquí vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-image-builder] para crear una VM de tipo KVM para ejecutarla en Linux utilizando https://libvirt.org[libvirt].
@@ -104,14 +110,15 @@ image-mode # cat config.toml
 [[blueprint.customizations.user]]
 name = "demouser"
 password = "redhat123"
-key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB/gDV9P3koGgKo8ODo/GNJNy2cBQj0t8wthy2FOgZOBnLBO3V0FPzpPq8zishevoShBrEv/W4+hbjqwhKZEps542yv2QD3pfHjQJmZmciQTf1GSrKMw20UoaPfctzDKJzwcFt3nEN3ZCG473fyjde/et8+CXP+RkZM1Tb2Vl8SRdzdv9EA91/tmqzFU2HvC1sPvFMqFkUXjtrff37jcSiQWmD7AbgAqbtDdNxS1StkRfe0ktR/F2YdgadVZHuvJwKlfdCxawhD82OImZbXHd6/dYB5F6B5qEMUd+19/IV6eg8/oXImlZttr8tk0T9oZQnY6WEAWft6R4qMoDik1cWKY5SxyUx8pFG+br/tgCuDACx9AgEejbVUQWnAxTQktadWs023rwLanoDOTXF0FJg3Dxnq4r336h/MP2u7ita3TKsZDbDFbwuRfj9yPjxFBC7TmGMUjKWC2TPNuBR7tPQsgGbgWclmn2l1eDt2ObMRbaHZs5Q0xfeMfKdcmN0OcvrHRX9fssY8HxZL18QvdgXCUFyisq9nLN5YxhUWU0zHyCfULxR9xiVKwHdQ4aUzgN5FAgLzPMhHxamoIZgoT5Ko4cbuECcH5Pf5K8Jw5/FzWNCjfHokOue2kIVkUczre/T9E2YmlfhQDcDaiEkpzI8Vctmk0IiATVgEUf7z3+y+w== jadebustos@archimedes"
+key = "ssh-rsa ...."
 groups = ["wheel"]
 
 image-mode # cat creating-vm.sh
 #!/bin/bash
 
 podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
-           -v $(pwd)/config.toml:/config.toml:ro -v $(pwd)/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
+           -v $(pwd)/config.toml:/config.toml:ro -v $(pwd)/output:/output \
+           -v /var/lib/containers/storage:/var/lib/containers/storage \
            registry.redhat.io/rhel9/bootc-image-builder:latest \
            --type qcow2 --local registry.melmac.univ:5000/rhel-bootc-vm:v1
 #
