@@ -6,11 +6,11 @@ include::_attributes.adoc[]
 
 En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.
 
-Veremos cómo bootc aprovecha la tecnología de contenedores existente para
+Veremos cómo bootc aprovecha la tecnología de contenedores existente para:
 
-* crear al aplicación en términos de su contenedor en tiempo de creación - el sistema no se cambia una vez desplegado
-* acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema
-* revertir el último cambio
+* Crear al aplicación en términos de su contenedor en tiempo de creación - el sistema no se cambia una vez desplegado.
+* Acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema.
+* Revertir el último cambio.
 
 [#crear-images]
 == Crear imágenes
@@ -21,7 +21,6 @@ La definición de un contenedor es prácticamente igual que la de un contenedor 
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 FROM quay.io/centos-bootc/centos-bootc:stream9
 ----
 
@@ -36,11 +35,36 @@ el temporizador en el momento de la creación de la imagen. Usamos la Containerf
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 FROM quay.io/centos-bootc/centos-bootc:stream9
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
 RUN echo v1 > /version
 ----
+
+[NOTE]
+=====
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+$ cat bootc-fetch-apply-updates.timer
+[Unit]
+Description=Apply bootc updates
+Documentation=man:bootc(8)
+ConditionPathExists=/run/ostree-booted
+
+[Timer]
+OnBootSec=30seconds
+# This time is relatively arbitrary and obviously expected to be overridden/changed
+OnUnitActiveSec=30seconds
+OnUnitInactiveSec=30seconds
+# When deploying a large number of systems, it may be beneficial to increase this value to help with load on the registry.
+RandomizedDelaySec=5seconds
+
+[Install]
+WantedBy=timers.target
+$
+----
+=====
 
 Creamos el contenedor por ejemplo con podman:
 
@@ -48,7 +72,6 @@ Creamos el contenedor por ejemplo con podman:
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 podman build -t <registry>/demo:latest .
 ----
 
@@ -74,7 +97,6 @@ El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Crea
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 # mkdir output
 # cat config.toml
 [[customizations.user]]
@@ -101,7 +123,6 @@ We then move the VM image file to file that's accessible by libvirt and import i
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 # qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on ./output/qcow2/disk.qcow2 /var/lib/libvirt/images/disk.qcow2
 # virt-install --name vm --os-variant rhel-unknown --memory 2048 --vcpus 2 --nographics --import --disk /var/lib/libvirt/images/disk.qcow2
 ----
@@ -120,7 +141,6 @@ Después de hacer log-in en la máquina comprobamos que el temporizador está ac
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-
 # sudo systemctl status bootc-fetch-apply-updates.timer
 ----
 
