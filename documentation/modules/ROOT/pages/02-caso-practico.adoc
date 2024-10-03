@@ -110,7 +110,7 @@ El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Crea
 image-mode # cat config.toml
 [[blueprint.customizations.user]]
 name = "demouser"
-password = "redhat123"
+password = "redhat"
 key = "ssh-rsa ...."
 groups = ["wheel"]
 
