@@ -75,8 +75,8 @@ $
 ----
 =====
 
-[HOMEWORK]
-====
+[TIP]
+=====
 Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al host **imagemode** y creamos el contedor utilizando podman:
 
 [.lines_7]
