@@ -212,8 +212,8 @@ $</code></pre>
 [root@imagemode ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
 ...
 [root@imagemode ~]# podman images
-REPOSITORY                                    TAG         IMAGE ID      CREATED            SIZE
-localhost/rhel-bootc-vm                       latest          cc3e1af1b6a6  2 minutes ago     1.75 GB
+REPOSITORY                                    TAG         IMAGE ID       CREATED           SIZE
+localhost/rhel-bootc-vm                       latest       cc3e1af1b6a6  2 minutes ago     1.75 GB
 ...
 [root@imagemode ~]#</code></pre>
 </div>
@@ -260,6 +260,8 @@ podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfin
            -v /var/lib/containers/storage:/var/lib/containers/storage \
            registry.redhat.io/rhel9/bootc-image-builder:latest \
            --type qcow2 --local registry.melmac.univ:5000/rhel-bootc-vm:latest
+[root@imagemode image-mode]# bash creating-vm.sh
+...
 [root@imagemode image-mode]#</code></pre>
 </div>
 </div>
