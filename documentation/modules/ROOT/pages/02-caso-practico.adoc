@@ -195,8 +195,16 @@ En el portatil ya se encuentra creada una máquina virtual para ejecutar la máq
 =====
 Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portatil vamos al launcher situado abajo y pinchamos en **Launch VM**:
 
-images::launchvm.png[]
+image::launchvm.png[]
+
+Una vez arrancada la máquina virtual:
+
+image::vm.png[]
 =====
+
+image::launchvm.png[]
+
+image::vm.png[]
 
 We then move the VM image file to file that's accessible by libvirt and import it.
 
