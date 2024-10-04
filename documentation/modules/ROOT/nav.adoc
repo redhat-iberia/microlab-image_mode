@@ -2,9 +2,9 @@
 ** xref:01-introduccion.adoc#bootable[Bootable Containers]
 
 * xref:02-caso-practico.adoc[2. Caso Práctico]
-** xref:02-caso-practico.adoc#descripcion[Actualizaciones automáticas]
-** xref:02-caso-practico.adoc#crear-images[Crear imágenes]
-** xref:02-caso-practico.adoc#update-rollback[Actualizar y revertir]
+** xref:02-caso-practico.adoc#descripcion[Descripción]
+** xref:02-caso-practico.adoc#crear-images[Creación de la primera imagen]
+** xref:02-caso-practico.adoc#update-rollback[Actualización y rollback]
 
 
 * xref:03-resources.adoc[Recursos]
