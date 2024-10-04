@@ -194,23 +194,27 @@ $</code></pre>
 </tr>
 </table>
 </div>
+<div class="exampleblock">
+<div class="content">
 <div class="paragraph">
-<p>Abrimos una terminal y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>bastion.lab.example.com</strong> y creamos el contedor utilizando podman:</p>
+<p>Abrimos una terminal y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>imagemode</strong> y creamos el contedor utilizando podman:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@workstation ~]$ ssh <a href="mailto:demouser@bastion.lab.example.com">demouser@bastion.lab.example.com</a>
-[demouser@bastion ~]$ sudo su -
-[root@bastion ~]# cd image-mode
-[root@bastion ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@workstation ~]$ ssh demouser@imagemode
+[demouser@imagemode ~]$ sudo su -
+[root@imagemode ~]# cd image-mode
+[root@imagemode ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
 ...
-[root@bastion ~]# podman images
+[root@imagemode ~]# podman images
 REPOSITORY                                    TAG         IMAGE ID      CREATED            SIZE
-localhost/rhel-bootc-vm                       v1          cc3e1af1b6a6  2 minutes ago     1.75 GB
+localhost/rhel-bootc-vm                       latest          cc3e1af1b6a6  2 minutes ago     1.75 GB
 ...
-[root@bastion ~]#</code></pre>
+[root@imagemode ~]#</code></pre>
 </div>
 </div>
+<div class="exampleblock">
+<div class="content">
 <div class="paragraph">
 <p>En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.</p>
 </div>
@@ -257,11 +261,9 @@ podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfin
 <div class="paragraph">
 <p>We can now log in and explore the system.</p>
 </div>
+<div id="update-rollback" class="paragraph">
+<p>== Actualizar y revertir del sistema</p>
 </div>
-</div>
-<div class="sect1">
-<h2 id="update-rollback"><a class="anchor" href="#update-rollback"></a>Actualizar y revertir del sistema</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p><code>bootc</code> es el comando que maneja los contenedores dentro de la VM. Viene con un temporizador que regularmente activa un servicio de systemd.
 Ese servicio, si detecta que una nueva imagen está disponible, la descarga y reinicia el sistema para aplicarla.</p>
@@ -352,6 +354,10 @@ v1</code></pre>
 <div class="paragraph">
 <p>Como hemos visto, <code>bootc</code> integra bien con herramientas existentes de contenedores. Esto significa que también disponemos de <a href="https://github.com/fedora-iot/greenboot">greenboot</a>
 para que revertir automáticamente un sistema que no inicie bien después de una actualización.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
