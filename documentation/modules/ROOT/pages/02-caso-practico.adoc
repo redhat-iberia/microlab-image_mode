@@ -75,23 +75,26 @@ $
 ----
 =====
 
-Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al host **bastion.lab.example.com** y creamos el contedor utilizando podman:
+[HOMEWORK]
+====
+Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al host **imagemode** y creamos el contedor utilizando podman:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-[imagemode@workstation ~]$ ssh demouser@bastion.lab.example.com
-[demouser@bastion ~]$ sudo su -
-[root@bastion ~]# cd image-mode
-[root@bastion ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
+[imagemode@workstation ~]$ ssh demouser@imagemode
+[demouser@imagemode ~]$ sudo su -
+[root@imagemode ~]# cd image-mode
+[root@imagemode ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:v1 .
 ...
-[root@bastion ~]# podman images
+[root@imagemode ~]# podman images
 REPOSITORY                                    TAG         IMAGE ID      CREATED            SIZE
-localhost/rhel-bootc-vm                       v1          cc3e1af1b6a6  2 minutes ago     1.75 GB
+localhost/rhel-bootc-vm                       latest          cc3e1af1b6a6  2 minutes ago     1.75 GB
 ...
-[root@bastion ~]# 
+[root@imagemode ~]# 
 ----
+=====
 
 En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.
 
