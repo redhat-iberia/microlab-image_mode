@@ -262,7 +262,7 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 
 [root@imagemodetest ~]#
 ----
-====
+=====
 
 Observar que al iniciar sesión con el usuario **demouser** veremos un mensaje de bienvenida **Bienvenido a una maquina desplegada con bootc-container-vm v1**. Este mensaje se modificará en la actualización que haremos a continuación.
 
