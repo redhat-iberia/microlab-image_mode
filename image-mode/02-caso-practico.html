@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Deploy Service :: RHEL Image Mode</title>
+    <title>Creación de una máquina virtual con bootc containers :: RHEL Image Mode</title>
     <link rel="canonical" href="https://redhat-iberia.github.io/image-mode/image-mode/02-caso-practico.html">
     <link rel="prev" href="01-introduccion.html">
     <link rel="next" href="03-resources.html">
@@ -100,9 +100,9 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Deploy Service</h1>
+<h1 class="page">Creación de una máquina virtual con bootc containers</h1>
 <div class="sect1">
-<h2 id="descripcion"><a class="anchor" href="#descripcion"></a>Actualizaciones automáticas</h2>
+<h2 id="descripcion"><a class="anchor" href="#descripcion"></a>Descriptción</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.</p>
@@ -126,7 +126,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="crear-images"><a class="anchor" href="#crear-images"></a>Crear imágenes</h2>
+<h2 id="crear-images"><a class="anchor" href="#crear-images"></a>Creación de la primera imagen</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>La definición de un contenedor es prácticamente igual que la de un contenedor tradicional, lo que cambia es la cláusula <code>FROM</code>.</p>
@@ -284,7 +284,7 @@ podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfin
 </div>
 </div>
 <div class="sect1">
-<h2 id="update-rollback"><a class="anchor" href="#update-rollback"></a>Actualizar y revertir del sistema</h2>
+<h2 id="update-rollback"><a class="anchor" href="#update-rollback"></a>Actualización y rollback</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>bootc</code> es el comando que maneja los contenedores dentro de la VM. Viene con un temporizador que regularmente activa un servicio de systemd.
@@ -326,7 +326,7 @@ RUN echo v2 &gt; /version</code></pre>
 <p>identificando esta nueva version en el archivo <code>/version</code>.</p>
 </div>
 <div class="paragraph">
-<p>Seguimos los mismos pasos como en <a href="#crear-images">Crear imágenes</a>.</p>
+<p>Seguimos los mismos pasos como en <a href="#crear-images">Creación de la primera imagen</a>.</p>
 </div>
 <div class="paragraph">
 <p>Veremos, cómo el servicio <code>bootc-fetch-apply-updates</code> encuentra la actualización, descarga los datos y reinicia el sistema.</p>
