@@ -462,20 +462,23 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 [root@imagemodetest ~]#</code></pre>
 </div>
 </div>
-<div class="exampleblock">
-<div class="content">
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Observar que al iniciar sesión con el usuario <strong>demouser</strong> veremos un mensaje de bienvenida <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong>. Este mensaje se modificará en la actualización que haremos a continuación.</p>
 </div>
 <div class="paragraph">
 <p>Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice.</p>
 </div>
-</div>
-</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
 </td>
-</tr>
-</table>
-</div>
+<td class="content">
 <div class="paragraph">
 <p>En una consola de la máquina <strong>imagemodetest</strong> comprobaremos las versiones disponibles que tenemos en la máquina:</p>
 </div>
@@ -633,19 +636,29 @@ Deployments:
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
 </div>
 </div>
-<div class="exampleblock">
-<div class="content">
-
+</td>
+</tr>
+</table>
 </div>
-</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
 <p>Se puede detectar si la actualización no funciona de forma correcta y realizar el rollback de forma autómatica. Este método se hace utilizando <a href="https://github.com/fedora-iot/greenboot">greenboot</a> que es el mismo mecanismo que utiliza la versión de RHEL para Edge. En estos momentos esta funcionalidad se está integrando con los contenedores <strong>bootc</strong> y estará disponible en el futuro.</p>
 </div>
-<div class="exampleblock">
-<div class="content">
-<div id="conclusriones" class="paragraph">
-<p>== Conclusiones</p>
+</td>
+</tr>
+</table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conclusriones"><a class="anchor" href="#conclusriones"></a>Conclusiones</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Hemos visto:</p>
 </div>
@@ -670,8 +683,6 @@ Deployments:
 <p>Existe una forma automática de detectar si la actualización no funciona correctamente de forma automática y hacer el rollback automático a la versión anterior y tener el sistema funcional.</p>
 </li>
 </ul>
-</div>
-</div>
 </div>
 </div>
 </div>
