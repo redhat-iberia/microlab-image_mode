@@ -245,6 +245,7 @@ Después de hacer login en la máquina comprobamos que el temporizador está act
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser: 
 Last login: Fri Oct  4 09:24:32 UTC 2024 on pts/0
@@ -263,11 +264,31 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 ----
 ====
 
+Observar que al iniciar sesión con el usuario **demouser** veremos un mensaje de bienvenida **Bienvenido a una maquina desplegada con bootc-container-vm v1**. Este mensaje se modificará en la actualización que haremos a continuación.
+
 Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice. 
 
 [TIP]
 =====
-Observaremos en una consola de la máquina **imagemodetest** vemos estado del servicio:
+
+En una consola de la máquina **imagemodetest** comprobaremos las versiones disponibles que tenemos en la máquina:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemodetest ~]# rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+[root@imagemodetest ~]# 
+----
+
+Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry **registry.lab.melmac.univ:5000/rhel-bootc-vm:latest**. Este es el contenedor que creamos y que utilizamos para construir la máquina virtual.
+
+Ahora observaremos el estado del servicio **bootc-fetch-apply-updates**:
 
 [.lines_7]
 [.console-input]
@@ -287,8 +308,8 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 ...
 ----
 
-En otra consola, en la máquina **imagemode** cambiamos el Containerfile
-
+En otra consola, en la máquina **imagemode**  utilizaremos el Containerfile **Containerfile.rhel9.4.mod** donde hemos modificado algunas cosas, como instalar el paquete **tmux**. Ejecutamos el script **bash create-container-mod.sh** que se encargará de crear la nueva version del **bootc container**. En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
+ 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -309,43 +330,73 @@ COPY public.xml /etc/firewalld/zones/
 COPY registries.conf /etc/containers/
 EXPOSE 443
 CMD [ "/sbin/init" ]
-[root@imagemode image-mode]#
+[root@imagemode image-mode]# bash create-container-mod.sh
+... 
+[root@imagemode image-mode]# 
 ----
 
-identificando esta nueva version en el archivo `+/version+`.
-
-Seguimos los mismos pasos como en <<crear-images>>.
-
-Veremos, cómo el servicio `+bootc-fetch-apply-updates+` encuentra la actualización, descarga los datos y reinicia el sistema.
+Volvemos a la consola de la máquina **imagemodetest** para ver el estado del servicio **bootc-fetch-apply-updates**. Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-Oct 01 16:07:29 localhost.localdomain systemd[1]: Starting Apply bootc updates...
-Oct 01 16:07:29 localhost.localdomain bootc[1206]: Fetching ostree-unverified-registry:<registry>/demo:latest
-Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
-Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
+[root@imagemodetest ~]# journalctl -f -u bootc-fetch-apply-updates
+....
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ systemd[1]: Starting Apply bootc updates...
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: Fetching ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: layers already present: 0; layers needed: 78 (1.0 GB)
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: layers already present: 0; layers needed: 78 (1.0 GB)
+Oct 04 10:12:42 imagemodetest.lab.melmac.univ bootc[2362]: Image contains non-ostree compatible file paths: run: 4
+
+Broadcast message from root@imagemodetest.lab.melmac.univ (Fri 2024-10-04 10:12:50 UTC):
+
+The system will reboot now!
+
+Connection to imagemodetest closed by remote host.
+Connection to imagemodetest closed.
+[root@imagemode image-mode]# 
 ----
-=====
+
+Ha detectado que hay una actualización nueva, la ha descargado, la ha aplicado y reiniciado el servicio. Nos conectamos de nuevo en cuando haya reiniciado, veremos que el proceso de actualización es muy rápido:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v2
+Last login: Fri Oct  4 10:07:25 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$ sudo su -
+[sudo] password for demouser: 
+Last login: Fri Oct  4 10:07:31 UTC 2024 on pts/0
+[root@imagemodetest ~]# rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:5360e472e60cc8d4c2f01dcaf333c0eba96150dbd79d46d9f15258e687415647
+                  Version: 9.20240930.0 (2024-10-04T10:11:53Z)
+
+  ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+[root@imagemodetest ~]# 
+----
+
+Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada.
 
 Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.
 
-[.lines_7]
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-$ sudo cat /version
-v2
-----
-
-`+bootc+` si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando
+Si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-$ sudo bootc rollback
+[root@imagemodetest ~]# bootc rollback
+bootfs is sufficient for calculated new size: 0 bytes
+Next boot: rollback deployment
+[root@imagemodetest ~]#  reboot
 ----
 
 El sistema reiniciará y veremos que nos encontramos en la versión previa:
@@ -354,18 +405,48 @@ El sistema reiniciará y veremos que nos encontramos en la versión previa:
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-$ sudo cat /version
-v1
+[root@imagemode ~]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
+Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$ rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+
+  ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:5360e472e60cc8d4c2f01dcaf333c0eba96150dbd79d46d9f15258e687415647
+                  Version: 9.20240930.0 (2024-10-04T10:11:53Z)
+[demouser@imagemodetest ~]$
 ----
 
-Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador
+Podemos ver que el mensaje de bienvenida vuelve a mostrar **Bienvenido a una maquina desplegada con bootc-container-vm v1** y que la versión activa es la primera que instalamos.
+
+Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-$ sudo systemctl disable --now bootc-fetch-apply-updates.timer
+[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer
 ----
+=====
 
-Como hemos visto, `+bootc+` integra bien con herramientas existentes de contenedores. Esto significa que también disponemos de https://github.com/fedora-iot/greenboot[greenboot]
-para que revertir automáticamente un sistema que no inicie bien después de una actualización.
+[NOTE]
+=====
+Se puede detectar si la actualización no funciona de forma correcta y realizar el rollback de forma autómatica. Este método se hace utilizando https://github.com/fedora-iot/greenboot[greenboot] que es el mismo mecanismo que utiliza la versión de RHEL para Edge. En estos momentos esta funcionalidad se está integrando con los contenedores **bootc** y estará disponible en el futuro. 
+=====
+
+[#conclusriones]
+== Conclusiones
+
+Hemos visto:
+
+* Como crear una máquina virtual a partir de un contenedor.
+* El proceso de actualizar es tan sencillo como recrear el contenedor a partir del que hemos creado la máquina virtual.
+* La actualización se puede hacer de forma automática, aunque también se puede lanzar de forma manual mediante automatismos.
+* El proceso de actualización es muy rápido.
+* El proceso de marcha atrás es muy rápido y sencillo.
+* Existe una forma automática de detectar si la actualización no funciona correctamente de forma automática y hacer el rollback automático a la versión anterior y tener el sistema funcional.
+
