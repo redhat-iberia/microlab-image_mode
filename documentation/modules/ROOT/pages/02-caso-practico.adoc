@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 
 [#descripcion]
-== Descriptción
+== Descripción
 
 En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.
 
