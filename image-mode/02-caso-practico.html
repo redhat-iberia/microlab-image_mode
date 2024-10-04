@@ -344,7 +344,7 @@ fi
 </table>
 </div>
 <div class="paragraph">
-<p>En el portatil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior al copiar el disco creado a la carpeta compartida ha sobreescrito el disco existente y al arrancar la máquina virtual arrancará con el disco que hemos creado.</p>
+<p>En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior al copiar el disco creado a la carpeta compartida ha sobreescrito el disco existente y al arrancar la máquina virtual arrancará con el disco que hemos creado.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -354,7 +354,7 @@ fi
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portatil vamos al launcher situado abajo y pinchamos en <strong>Launch VM</strong>:</p>
+<p>Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portátil vamos al launcher situado abajo y pinchamos en <strong>Launch VM</strong>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -373,27 +373,34 @@ fi
 </tr>
 </table>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/launchvm.png" alt="launchvm">
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vm.png" alt="vm">
-</div>
-</div>
 <div class="paragraph">
-<p>We then move the VM image file to file that&#8217;s accessible by libvirt and import it.</p>
+<p>Ahora podemos conectarnos a la máquina virtual que hemos creado y explorar.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Tenemos dos formas de conectarnos, nos podemos conectar por ssh utilizando las credenciales definidas en el fichero <strong>config.toml</strong>:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on ./output/qcow2/disk.qcow2 /var/lib/libvirt/images/disk.qcow2
-# virt-install --name vm --os-variant rhel-unknown --memory 2048 --vcpus 2 --nographics --import --disk /var/lib/libvirt/images/disk.qcow2</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+[demouser@imagemodetest ~]$</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can now log in and explore the system.</p>
+<p>Como en el fichero de configuración <strong>config.toml</strong> hemos incluido la clave pública no nos pedirá contraseña.</p>
+</div>
+<div class="paragraph">
+<p>La otra forma de conectarnos es a través de la consola que hemos abierto con <strong>Launch VM</strong>. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero <strong>config.toml</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
