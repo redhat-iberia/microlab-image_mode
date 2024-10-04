@@ -219,7 +219,16 @@ Tenemos dos formas de conectarnos, nos podemos conectar por ssh utilizando las c
 Como en el fichero de configuración **config.toml** hemos incluido la clave pública no nos pedirá contraseña.
 
 La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
+
+Desde el portátil, abre una pestaña del navegador y conectate a (A la máquina que acabas de creat)[https://imagemodetest.lab.melmac.univ] para comprobar sí la aplicación funciona correctamente.
 =====
+
+[IMPORTANT]
+====
+Como ejemplo hemos desplegado una apliación muy simple ya que el objetivo de este lab es ilustrar como se puede automatizar el despliegue no solo del sistema, sino que también de las aplicaciones.
+
+Como en el mundo real las aplicaciones son más complejas de instalar el **Containerfile** utilizado deberá contener todos los pasos para desplegar la aplicación.
+====
 
 [#update-rollback]
 == Actualización y rollback
