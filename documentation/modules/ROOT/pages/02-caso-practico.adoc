@@ -39,18 +39,34 @@ FROM registry.redhat.io/rhel9/rhel-bootc:9.4
 RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es && /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf && /usr/bin/systemctl enable httpd
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
 COPY motd /etc/motd.d/
+COPY hostname /etc/
 COPY index.php /var/www/html
 COPY httpd.key /etc/pki/tls/private/
 COPY httpd.crt /etc/pki/tls/certs/
 COPY cacert.pem /etc/pki/tls/certs/
 COPY ssl.conf /etc/httpd/conf.d/
 COPY public.xml /etc/firewalld/zones/
+COPY registries.conf /etc/containers/
 EXPOSE 443
 CMD [ "/sbin/init" ]
 ----
 
+[IMPORTANT]
+=====
+Como hemos comentado **bootc containers** se encuentra en Technology Preview y todavía hay opciones de configuración que se están implementando. Por ese motivo hemos tenido que recurrir a:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es && /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf && /usr/bin/systemctl enable httpd
+----
+=====
+
 [NOTE]
 =====
+El timer de systemd que se encarga de comprobar si hay actualizaciones:
+
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -86,7 +102,33 @@ Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al hos
 [imagemode@workstation ~]$ ssh demouser@imagemode
 [demouser@imagemode ~]$ sudo su -
 [root@imagemode ~]# cd image-mode
-[root@imagemode ~]#  podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
+[root@imagemode ~]# cat create-container.sh
+#!/bin/bash
+
+podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR AL CONSTRUIR LA IMAGEN"
+  exit 1
+fi
+
+podman tag localhost/rhel-bootc-vm:latest registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR TAGEAR LA IMAGEN"
+  exit 1
+fi
+
+podman push registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR TAGEAR AL HACER PUSH"
+  exit 1
+fi
+[root@imagemode ~]# bash create-container.sh
 ...
 [root@imagemode ~]# podman images
 REPOSITORY                                    TAG         IMAGE ID       CREATED           SIZE
@@ -122,15 +164,38 @@ groups = ["wheel"]
 [root@imagemode image-mode]#  cat creating-vm.sh
 #!/bin/bash
 
-podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
-           -v $(pwd)/config.toml:/config.toml:ro -v $(pwd)/output:/output \
-           -v /var/lib/containers/storage:/var/lib/containers/storage \
+/usr/bin/podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
+           -v $(pwd)/config.toml:/config.toml:ro -v $(pwd)/output:/output -v /var/lib/containers/storage:/var/lib/containers/storage \
            registry.redhat.io/rhel9/bootc-image-builder:latest \
-           --type qcow2 --local registry.melmac.univ:5000/rhel-bootc-vm:latest
+           --type qcow2 --local registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+
+if [ $? -ne 0 ]
+then
+  echo "Ocurrio un error creando la VM"
+  exit 1
+fi
+
+/usr/bin/qemu-img convert -f qcow2 -O qcow2 -o lazy_refcounts=on $(pwd)/output/qcow2/disk.qcow2 /imagemode/image-mode-test.qcow2
 [root@imagemode image-mode]# bash creating-vm.sh
 ...
 [root@imagemode image-mode]#
 ----
+=====
+
+Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio **output**. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual.
+
+[TIP]
+=====
+Utilizando los comandos **cd** y **ls** puedes navegar por el directorio output para ver que se ha generado.
+=====
+
+En el portatil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior al copiar el disco creado a la carpeta compartida ha sobreescrito el disco existente y al arrancar la máquina virtual arrancará con el disco que hemos creado.
+
+[TIP]
+=====
+Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portatil vamos al launcher situado abajo y pinchamos en **Launch VM**:
+
+images::launchvm.png[]
 =====
 
 We then move the VM image file to file that's accessible by libvirt and import it.
