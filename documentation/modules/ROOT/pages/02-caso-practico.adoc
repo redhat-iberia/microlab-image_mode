@@ -236,39 +236,80 @@ Como en el mundo real las aplicaciones son más complejas de instalar el **Conta
 `+bootc+` es el comando que maneja los contenedores dentro de la VM. Viene con un temporizador que regularmente activa un servicio de systemd.
 Ese servicio, si detecta que una nueva imagen está disponible, la descarga y reinicia el sistema para aplicarla.
 
-Después de hacer log-in en la máquina comprobamos que el temporizador está activo:
+[TIP]
+=====
+Después de hacer login en la máquina comprobamos que el temporizador está activo:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-# sudo systemctl status bootc-fetch-apply-updates.timer
-----
+[root@imagemode image-mode]# ssh demouser@imagemodetest
+[demouser@imagemodetest ~]$ sudo su -
+[sudo] password for demouser: 
+Last login: Fri Oct  4 09:24:32 UTC 2024 on pts/0
+[root@imagemodetest ~]# systemctl status bootc-fetch-apply-updates.timer
+● bootc-fetch-apply-updates.timer - Apply bootc updates
+     Loaded: loaded (/usr/lib/systemd/system/bootc-fetch-apply-updates.timer; disabled; preset: disabled)
+     Active: active (waiting) since Fri 2024-10-04 09:23:58 UTC; 14min ago
+      Until: Fri 2024-10-04 09:23:58 UTC; 14min ago
+    Trigger: Fri 2024-10-04 09:39:24 UTC; 27s left
+   Triggers: ● bootc-fetch-apply-updates.service
+       Docs: man:bootc(8)
 
-En lo que sigue, vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice. Observaremos en una consola el estado del servicio:
+Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc updates.
+
+[root@imagemodetest ~]#
+----
+====
+
+Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice. 
+
+[TIP]
+=====
+Observaremos en una consola de la máquina **imagemodetest** vemos estado del servicio:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-# sudo journalctl -f -u bootc-fetch-apply-updates
-Oct 01 16:05:54 localhost.localdomain systemd[1]: Starting Apply bootc updates...
-Oct 01 16:05:54 localhost.localdomain bootc[1179]: Fetching ostree-unverified-registry:<registry>/demo:latest
-Oct 01 16:05:54 localhost.localdomain bootc[1179]: No changes in <registry>/demo:latest => sha256:40106b8d8e453901b78398c819a6b95f4d7b55a28b8783d8e19e276197f2f814
-Oct 01 16:05:54 localhost.localdomain bootc[1179]: No update available.
-Oct 01 16:05:54 localhost.localdomain systemd[1]: bootc-fetch-apply-updates.service: Deactivated successfully.
-Oct 01 16:05:54 localhost.localdomain systemd[1]: Finished Apply bootc updates.
+[root@imagemodetest ~]# journalctl -f -u bootc-fetch-apply-updates
+Oct 04 09:40:49 imagemodetest.lab.melmac.univ bootc[1572]: No changes in registry.lab.melmac.univ:5000/rhel-bootc-vm:latest => sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+Oct 04 09:40:49 imagemodetest.lab.melmac.univ bootc[1572]: No update available.
+Oct 04 09:40:49 imagemodetest.lab.melmac.univ systemd[1]: bootc-fetch-apply-updates.service: Deactivated successfully.
+Oct 04 09:40:49 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc updates.
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Starting Apply bootc updates...
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ bootc[1584]: Fetching ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ bootc[1584]: No changes in registry.lab.melmac.univ:5000/rhel-bootc-vm:latest => sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ bootc[1584]: No update available.
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: bootc-fetch-apply-updates.service: Deactivated successfully.
+Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc updates.
+...
 ----
 
-En otra consola, cambiamos la Containerfile
+En otra consola, en la máquina **imagemode** cambiamos el Containerfile
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-FROM quay.io/centos-bootc/centos-bootc:stream9
+[root@imagemode image-mode]# cat Containerfile.rhel9.4.mod 
+FROM registry.redhat.io/rhel9/rhel-bootc:9.4
+RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es tmux && /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf && /usr/bin/systemctl enable httpd
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
-RUN echo v2 > /version
+COPY motd2 /etc/motd.d/motd
+COPY hostname /etc/
+COPY index2.php /var/www/html/index.php
+COPY rhel-logo.png /var/www/html/
+COPY httpd.key /etc/pki/tls/private/
+COPY httpd.crt /etc/pki/tls/certs/
+COPY cacert.pem /etc/pki/tls/certs/
+COPY ssl.conf /etc/httpd/conf.d/
+COPY public.xml /etc/firewalld/zones/
+COPY registries.conf /etc/containers/
+EXPOSE 443
+CMD [ "/sbin/init" ]
+[root@imagemode image-mode]#
 ----
 
 identificando esta nueva version en el archivo `+/version+`.
@@ -286,6 +327,7 @@ Oct 01 16:07:29 localhost.localdomain bootc[1206]: Fetching ostree-unverified-re
 Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
 Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
 ----
+=====
 
 Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.
 
