@@ -1,8 +1,8 @@
-= Deploy Service
+= Creación de una máquina virtual con bootc containers
 include::_attributes.adoc[]
 
 [#descripcion]
-== Actualizaciones automáticas
+== Descriptción
 
 En este caso práctico, crearemos una máquina virtual (VM) a partir de una imágen de contenedor.
 
@@ -13,7 +13,7 @@ Veremos cómo bootc aprovecha la tecnología de contenedores existente para:
 * Revertir el último cambio.
 
 [#crear-images]
-== Crear imágenes
+== Creación de la primera imagen
 
 La definición de un contenedor es prácticamente igual que la de un contenedor tradicional, lo que cambia es la cláusula `+FROM+`.
 
@@ -146,7 +146,7 @@ We then move the VM image file to file that's accessible by libvirt and import i
 We can now log in and explore the system.
 
 [#update-rollback]
-== Actualizar y revertir del sistema
+== Actualización y rollback
 
 `+bootc+` es el comando que maneja los contenedores dentro de la VM. Viene con un temporizador que regularmente activa un servicio de systemd.
 Ese servicio, si detecta que una nueva imagen está disponible, la descarga y reinicia el sistema para aplicarla.
