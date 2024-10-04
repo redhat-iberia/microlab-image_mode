@@ -18,3 +18,10 @@ Bootable containers son contenedores que implementan el estándar de OCI para co
 ====
 RHEL Image Mode se encuentra actualmente disponible en RHEL 9.4 como **Technology Preview (TP)**, lo que significa que no se encuentra todavía listo para su uso en producción. Sin embargo, puede usarse para ir familiarizándose con la tecnología, de esta forma cuando pase a **General Availability (GA)** aquellos que lo consideren útil podrán empezar a usarlo desde el primer momento.
 ====
+
+En este workshop la parte práctica que tiene que realizar el alumno vendrá indicada de la siguiente forma:
+
+[TIP]
+=====
+Ejemplo práctico para que lo haga el alumno.
+=====
