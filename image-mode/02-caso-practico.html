@@ -444,6 +444,7 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser:
 Last login: Fri Oct  4 09:24:32 UTC 2024 on pts/0
@@ -464,6 +465,9 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<p>Observar que al iniciar sesión con el usuario <strong>demouser</strong> veremos un mensaje de bienvenida <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong>. Este mensaje se modificará en la actualización que haremos a continuación.</p>
+</div>
+<div class="paragraph">
 <p>Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice.</p>
 </div>
 </div>
@@ -473,7 +477,24 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 </table>
 </div>
 <div class="paragraph">
-<p>Observaremos en una consola de la máquina <strong>imagemodetest</strong> vemos estado del servicio:</p>
+<p>En una consola de la máquina <strong>imagemodetest</strong> comprobaremos las versiones disponibles que tenemos en la máquina:</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+[root@imagemodetest ~]#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry <strong>registry.lab.melmac.univ:5000/rhel-bootc-vm:latest</strong>. Este es el contenedor que creamos y que utilizamos para construir la máquina virtual.</p>
+</div>
+<div class="paragraph">
+<p>Ahora observaremos el estado del servicio <strong>bootc-fetch-apply-updates</strong>:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -492,7 +513,7 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 </div>
 </div>
 <div class="paragraph">
-<p>En otra consola, en la máquina <strong>imagemode</strong> cambiamos el Containerfile</p>
+<p>En otra consola, en la máquina <strong>imagemode</strong>  utilizaremos el Containerfile <strong>Containerfile.rhel9.4.mod</strong> donde hemos modificado algunas cosas, como instalar el paquete <strong>tmux</strong>. Ejecutamos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>. En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -512,43 +533,72 @@ COPY public.xml /etc/firewalld/zones/
 COPY registries.conf /etc/containers/
 EXPOSE 443
 CMD [ "/sbin/init" ]
+[root@imagemode image-mode]# bash create-container-mod.sh
+...
 [root@imagemode image-mode]#</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>identificando esta nueva version en el archivo <code>/version</code>.</p>
-</div>
-<div class="paragraph">
-<p>Seguimos los mismos pasos como en <a href="#crear-images">Creación de la primera imagen</a>.</p>
-</div>
-<div class="paragraph">
-<p>Veremos, cómo el servicio <code>bootc-fetch-apply-updates</code> encuentra la actualización, descarga los datos y reinicia el sistema.</p>
+<p>Volvemos a la consola de la máquina <strong>imagemodetest</strong> para ver el estado del servicio <strong>bootc-fetch-apply-updates</strong>. Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Oct 01 16:07:29 localhost.localdomain systemd[1]: Starting Apply bootc updates...
-Oct 01 16:07:29 localhost.localdomain bootc[1206]: Fetching ostree-unverified-registry:&lt;registry&gt;/demo:latest
-Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)
-Oct 01 16:07:30 localhost.localdomain bootc[1206]: layers already present: 70; layers needed: 1 (141 bytes)</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# journalctl -f -u bootc-fetch-apply-updates
+....
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ systemd[1]: Starting Apply bootc updates...
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: Fetching ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: layers already present: 0; layers needed: 78 (1.0 GB)
+Oct 04 10:12:22 imagemodetest.lab.melmac.univ bootc[2362]: layers already present: 0; layers needed: 78 (1.0 GB)
+Oct 04 10:12:42 imagemodetest.lab.melmac.univ bootc[2362]: Image contains non-ostree compatible file paths: run: 4
+
+Broadcast message from <a href="mailto:root@imagemodetest.lab.melmac.univ">root@imagemodetest.lab.melmac.univ</a> (Fri 2024-10-04 10:12:50 UTC):
+
+The system will reboot now!
+
+Connection to imagemodetest closed by remote host.
+Connection to imagemodetest closed.
+[root@imagemode image-mode]#</code></pre>
 </div>
 </div>
-<div class="exampleblock">
+<div class="paragraph">
+<p>Ha detectado que hay una actualización nueva, la ha descargado, la ha aplicado y reiniciado el servicio. Nos conectamos de nuevo en cuando haya reiniciado, veremos que el proceso de actualización es muy rápido:</p>
+</div>
+<div class="listingblock lines_7 console-input">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v2
+Last login: Fri Oct  4 10:07:25 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$ sudo su -
+[sudo] password for demouser:
+Last login: Fri Oct  4 10:07:31 UTC 2024 on pts/0
+[root@imagemodetest ~]# rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:5360e472e60cc8d4c2f01dcaf333c0eba96150dbd79d46d9f15258e687415647
+                  Version: 9.20240930.0 (2024-10-04T10:11:53Z)
+
+  ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+[root@imagemodetest ~]#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada.</p>
+</div>
 <div class="paragraph">
 <p>Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.</p>
 </div>
-<div class="listingblock lines_7 console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo cat /version
-v2</code></pre>
-</div>
-</div>
 <div class="paragraph">
-<p><code>bootc</code> si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando</p>
+<p>Si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo bootc rollback</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# bootc rollback
+bootfs is sufficient for calculated new size: 0 bytes
+Next boot: rollback deployment
+[root@imagemodetest ~]#  reboot</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -556,21 +606,70 @@ v2</code></pre>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo cat /version
-v1</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode ~]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
+Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$ rpm-ostree status
+State: idle
+Deployments:
+● ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:90ddf6a6f750042ac4c320e631a94a65cba7d62361b00b6596258cd419083a7b
+                  Version: 9.20240930.0 (2024-10-04T09:19:28Z)
+
+  ostree-unverified-registry:registry.lab.melmac.univ:5000/rhel-bootc-vm:latest
+                   Digest: sha256:5360e472e60cc8d4c2f01dcaf333c0eba96150dbd79d46d9f15258e687415647
+                  Version: 9.20240930.0 (2024-10-04T10:11:53Z)
+[demouser@imagemodetest ~]$</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador</p>
+<p>Podemos ver que el mensaje de bienvenida vuelve a mostrar <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong> y que la versión activa es la primera que instalamos.</p>
+</div>
+<div class="paragraph">
+<p>Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+
 </div>
 </div>
 <div class="paragraph">
-<p>Como hemos visto, <code>bootc</code> integra bien con herramientas existentes de contenedores. Esto significa que también disponemos de <a href="https://github.com/fedora-iot/greenboot">greenboot</a>
-para que revertir automáticamente un sistema que no inicie bien después de una actualización.</p>
+<p>Se puede detectar si la actualización no funciona de forma correcta y realizar el rollback de forma autómatica. Este método se hace utilizando <a href="https://github.com/fedora-iot/greenboot">greenboot</a> que es el mismo mecanismo que utiliza la versión de RHEL para Edge. En estos momentos esta funcionalidad se está integrando con los contenedores <strong>bootc</strong> y estará disponible en el futuro.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div id="conclusriones" class="paragraph">
+<p>== Conclusiones</p>
+</div>
+<div class="paragraph">
+<p>Hemos visto:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Como crear una máquina virtual a partir de un contenedor.</p>
+</li>
+<li>
+<p>El proceso de actualizar es tan sencillo como recrear el contenedor a partir del que hemos creado la máquina virtual.</p>
+</li>
+<li>
+<p>La actualización se puede hacer de forma automática, aunque también se puede lanzar de forma manual mediante automatismos.</p>
+</li>
+<li>
+<p>El proceso de actualización es muy rápido.</p>
+</li>
+<li>
+<p>El proceso de marcha atrás es muy rápido y sencillo.</p>
+</li>
+<li>
+<p>Existe una forma automática de detectar si la actualización no funciona correctamente de forma automática y hacer el rollback automático a la versión anterior y tener el sistema funcional.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
