@@ -24,12 +24,29 @@ La definición de un contenedor es prácticamente igual que la de un contenedor 
 FROM registry.redhat.io/rhel9/rhel-bootc:9.4
 ----
 
+[IMPORTANT]
+=====
+Para acceder a la imagen anterior es necesario autenticarse en el registry de Red Hat con un usuario válido. En este laboratorio se proporcionan las imágenes ya descargadas con lo cual no será necesario realizar este paso.
+=====
+
+[NOTE]
+=====
+Es posible también el utilizar las versiones de desarrollo utilizando **CentOS Stream**:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+FROM quay.io/centos-bootc/centos-bootc:stream9
+----
+=====
+
 En nuestro ejemplo simplemente crearemos un contenedor que instala y configura un servidor apache para servir contenido mediante el protocolo HTTPS.
 
-Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y aplicarlas.
+Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y, de existir, las aplicará.
 
 Para nuestro caso práctico vamos a crear un sistema con el temporizador comprobando si existen actualizaciones cada 30 segundos. Para esto sobreescribimos
-el temporizador en el momento de la creación de la imagen. Usamos la Containerfile:
+el temporizador en el momento de la creación de la imagen. Usamos el Containerfile:
 
 [.lines_7]
 [.console-input]
@@ -53,7 +70,7 @@ CMD [ "/sbin/init" ]
 
 [IMPORTANT]
 =====
-Como hemos comentado **bootc containers** se encuentra en Technology Preview y todavía hay opciones de configuración que se están implementando. Por ese motivo hemos tenido que recurrir a:
+Como hemos comentado **bootc containers** se encuentra en **Technology Preview** y todavía hay opciones de configuración que se están implementando. Por ese motivo hemos tenido que recurrir a:
 
 [.lines_7]
 [.console-input]
@@ -93,7 +110,7 @@ $
 
 [TIP]
 =====
-Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al host **imagemode** y creamos el contedor utilizando podman:
+Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario **demouser** al host **imagemode**, donde creamos el contedor utilizando podman. Se proporciona un script llamado **create-container.sh** que se encargará de crear el contenedor con solo ejecutarlo:
 
 [.lines_7]
 [.console-input]
@@ -102,7 +119,7 @@ Abrimos una terminal y nos conectamos por ssh con el usuario **demouser** al hos
 [imagemode@workstation ~]$ ssh demouser@imagemode
 [demouser@imagemode ~]$ sudo su -
 [root@imagemode ~]# cd image-mode
-[root@imagemode ~]# cat create-container.sh
+[root@imagemode image-mode cat create-container.sh
 #!/bin/bash
 
 podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
@@ -128,33 +145,37 @@ then
   echo "ERROR TAGEAR AL HACER PUSH"
   exit 1
 fi
-[root@imagemode ~]# bash create-container.sh
+[root@imagemode image-mode]# bash create-container.sh
 ...
-[root@imagemode ~]# podman images
+[root@imagemode image-mode]# podman images
 REPOSITORY                                    TAG         IMAGE ID       CREATED           SIZE
 localhost/rhel-bootc-vm                       latest       cc3e1af1b6a6  2 minutes ago     1.75 GB
 ...
-[root@imagemode ~]# 
+[root@imagemode image-mode]# 
 ----
 =====
 
 En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.
 
-Podemos crear sistemas de varias maneras: con imágenes para máquinas virtuales o también creando DVDs (ISO) que podemos utilizar para automáticamente instalar
+Podemos crear sistemas de varias maneras: 
+
+1. Con imágenes para máquinas virtuales.
+2. También creando DVDs (ISO) que podemos utilizar para automáticamente instalar
 un servidor baremetal con https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/automatically_installing_rhel/automated-installation-workflow_rhel-installer#automated-installation-workflow_rhel-installer[kickstart].
 
-Aquí vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-image-builder] para crear una VM de tipo KVM para ejecutarla en Linux utilizando https://libvirt.org[libvirt].
+En este laboratorio nos vamos a centrar en el punto 1. Aquí vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-image-builder] para crear una VM de tipo KVM para ejecutarla en Linux utilizando https://libvirt.org[libvirt].
 
 El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo `+config.toml+` para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en https://github.com/osbuild/bootc-image-builder[bootc-image-builder].
 
 [TIP]
 =====
+En la máquina **imagemode** donde ya estamos conectados y como usuario **root**:
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-[root@imagemode ~]#  mkdir output
-image-mode # cat config.toml
+[root@imagemode image-mode]#  mkdir output
+[root@imagemode image-mode]#  cat config.toml
 [[blueprint.customizations.user]]
 name = "demouser"
 password = "redhat"
@@ -180,6 +201,13 @@ fi
 ...
 [root@imagemode image-mode]#
 ----
+
+**Será necesario esperar a que termine la ejecución del script para continuar con el laboratorio.**
+=====
+
+[IMPORTANT]
+=====
+Revisa el fichero de configuración **config.toml** ya que en el se define el usuario que se utilizará para conectarse a la máquina virtual que vamos a crear, además de su password y también se configura la clave pública del usuario **root** de la máquina **imagemode**. De esta forma se podrá acceder desde dicho usuario a la máquina que hemos creado por ssh con el usuario **demouser** sin facilitar la contraseña. Sin embargo, en la máquina que vamos a crear necesitaremos el password del usuario **demouser** para poder acceder al usuario **root**.
 =====
 
 Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio **output**. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual.
