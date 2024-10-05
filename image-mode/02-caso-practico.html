@@ -688,7 +688,7 @@ Deployments:
 </div>
 </div>
 <div class="paragraph">
-<p>Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada.</p>
+<p>Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada. Cada una de estas versiones se corresponde con una entrada en el gestor de arranque <strong>GRUB</strong>, con lo cual podemos arrancar la versión que consideremos.</p>
 </div>
 <div class="paragraph">
 <p>Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.</p>
@@ -709,7 +709,7 @@ Next boot: rollback deployment
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode ~]# ssh demouser@imagemodetest
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
 Bienvenido a una maquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ rpm-ostree status
@@ -729,12 +729,68 @@ Deployments:
 <p>Podemos ver que el mensaje de bienvenida vuelve a mostrar <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong> y que la versión activa es la primera que instalamos.</p>
 </div>
 <div class="paragraph">
+<p>Si esperamos un poco veremos que la máquina se reinicia y una vez reiniciada si nos conectamos:</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v2
+Last login: Fri Oct  4 10:47:28 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vemos que el mensaje de bienvenida ha cambiado siendo <strong>Bienvenido a una maquina desplegada con bootc-container-vm v2</strong>. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla.</p>
+</div>
+<div class="paragraph">
 <p>Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Una vez desactivado podemos proceder a realizar el rollback y veremos que esta vez no se autoactualiza:</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# bootc rollback
+bootfs is sufficient for calculated new size: 0 bytes
+Next boot: rollback deployment
+[root@imagemodetest ~]#  reboot</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Y una vez que la máquina <strong>imagemodetest</strong> haya iniciado:</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
+Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Por simplicidad se ha instalado un registry local y solo se mantiene una copia de la imagen del contenedor con el tag <strong>latest</strong>.</p>
+</div>
+<div class="paragraph">
+<p>En un sistema en producción en el registry se encontrarán varias imágenes del contenedor tageadas con su versión correspondiente, por ejemplo <strong>v1</strong>, <strong>v2</strong>, &#8230;&#8203; y se utilizaría el tag <strong>latest</strong> para "apuntar" a la versión que es necesario ejecutar en producción.</p>
+</div>
+<div class="paragraph">
+<p>Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag <strong>latest</strong> para que apuntará a la versión del contenedor que se va a hacer rollback para que, de esta forma, la información del registry sea congruente con la configuración en producción.</p>
 </div>
 </td>
 </tr>
