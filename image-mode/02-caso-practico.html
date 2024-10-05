@@ -609,15 +609,9 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 <div class="paragraph">
 <p>Ejecutaremos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>.</p>
 </div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
 </div>
-<div class="exampleblock">
-<div class="content">
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# cat Containerfile.rhel9.4.mod
@@ -736,7 +730,9 @@ Deployments:
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
 </div>
 </div>
-</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
