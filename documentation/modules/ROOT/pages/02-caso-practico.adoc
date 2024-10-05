@@ -163,7 +163,7 @@ Podemos crear sistemas de varias maneras:
 2. También creando DVDs (ISO) que podemos utilizar para automáticamente instalar
 un servidor baremetal con https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/automatically_installing_rhel/automated-installation-workflow_rhel-installer#automated-installation-workflow_rhel-installer[kickstart].
 
-En este laboratorio nos vamos a centrar en el punto 1. Aquí vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-image-builder] para crear una VM de tipo KVM para ejecutarla en Linux utilizando https://libvirt.org[libvirt].
+En este laboratorio nos vamos a centrar en el punto 1. Vamos a utilizar https://github.com/osbuild/bootc-image-builder[bootc-image-builder] para crear una VM de tipo KVM para ejecutarla en Linux utilizando https://libvirt.org[libvirt].
 
 El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo `+config.toml+` para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en https://github.com/osbuild/bootc-image-builder[bootc-image-builder].
 
@@ -174,15 +174,15 @@ En la máquina **imagemode** donde ya estamos conectados y como usuario **root**
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-[root@imagemode image-mode]#  mkdir output
-[root@imagemode image-mode]#  cat config.toml
+[root@imagemode image-mode]# mkdir output
+[root@imagemode image-mode]# cat config.toml
 [[blueprint.customizations.user]]
 name = "demouser"
 password = "redhat"
 key = "ssh-rsa ...."
 groups = ["wheel"]
 
-[root@imagemode image-mode]#  cat creating-vm.sh
+[root@imagemode image-mode]# cat creating-vm.sh
 #!/bin/bash
 
 /usr/bin/podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
@@ -210,14 +210,14 @@ fi
 Revisa el fichero de configuración **config.toml** ya que en el se define el usuario que se utilizará para conectarse a la máquina virtual que vamos a crear, además de su password y también se configura la clave pública del usuario **root** de la máquina **imagemode**. De esta forma se podrá acceder desde dicho usuario a la máquina que hemos creado por ssh con el usuario **demouser** sin facilitar la contraseña. Sin embargo, en la máquina que vamos a crear necesitaremos el password del usuario **demouser** para poder acceder al usuario **root**.
 =====
 
-Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio **output**. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual.
+Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio **output**. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual en el portátil.
 
 [TIP]
 =====
-Utilizando los comandos **cd** y **ls** puedes navegar por el directorio output para ver que se ha generado.
+Utilizando los comandos **cd** y **ls** puedes navegar por el directorio **output** creado en la máquina **imagemode** para ver que tipo de contenido se ha generado.
 =====
 
-En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior al copiar el disco creado a la carpeta compartida ha sobreescrito el disco existente y al arrancar la máquina virtual arrancará con el disco que hemos creado.
+En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior ha creado, como habrás visto un disco virtual para kvm llamado **disk.qcow2** dendro del directorio **output**. Ese disco ha sido copiado a una carpeta compartida sobreescribiendo el disco existente de tal forma que al arrancar la máquina virtual arrancará con el disco que hemos creado.
 
 [TIP]
 =====
@@ -234,21 +234,21 @@ Ahora podemos conectarnos a la máquina virtual que hemos creado y explorar.
 
 [TIP]
 =====
-Tenemos dos formas de conectarnos, nos podemos conectar por ssh utilizando las credenciales definidas en el fichero **config.toml**:
+Tenemos dos formas de conectarnos: 
 
-[.lines_7]
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-[root@imagemode image-mode]# ssh demouser@imagemodetest
-[demouser@imagemodetest ~]$ 
-----
+1. Desde la máquina virtual **imagemode** con el usuario **root** nos podemos conectar por ssh a la máquina creadada sin utilizar password ya que hemos configurado la clave pública en el fichero **config.toml**. La máquina virtual se llama **imagemodetest**:
 
-Como en el fichero de configuración **config.toml** hemos incluido la clave pública no nos pedirá contraseña.
+  [.lines_7]
+  [.console-input]
+  [source,bash,subs="+macros,+attributes"]
+  ----
+  [root@imagemode image-mode]# ssh demouser@imagemodetest
+  [demouser@imagemodetest ~]$ 
+  ----
 
-La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
+2. La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
 
-Desde el portátil, abre una pestaña del navegador y conectate a (A la máquina que acabas de creat)[https://imagemodetest.lab.melmac.univ] para comprobar sí la aplicación funciona correctamente.
+Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de crear: [https://imagemodetest.lab.melmac.univ] para comprobar sí la aplicación funciona correctamente.
 =====
 
 [IMPORTANT]
