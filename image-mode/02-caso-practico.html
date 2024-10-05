@@ -136,15 +136,48 @@
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM registry.redhat.io/rhel9/rhel-bootc:9.4</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Para acceder a la imagen anterior es necesario autenticarse en el registry de Red Hat con un usuario válido. En este laboratorio se proporcionan las imágenes ya descargadas con lo cual no será necesario realizar este paso.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Es posible también el utilizar las versiones de desarrollo utilizando <strong>CentOS Stream</strong>:</p>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">FROM quay.io/centos-bootc/centos-bootc:stream9</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>En nuestro ejemplo simplemente crearemos un contenedor que instala y configura un servidor apache para servir contenido mediante el protocolo HTTPS.</p>
 </div>
 <div class="paragraph">
-<p>Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y aplicarlas.</p>
+<p>Bootc viene instalado en esas imágenes junto con un temporizador que periódicamente comprueba si existen actualizaciones y, de existir, las aplicará.</p>
 </div>
 <div class="paragraph">
 <p>Para nuestro caso práctico vamos a crear un sistema con el temporizador comprobando si existen actualizaciones cada 30 segundos. Para esto sobreescribimos
-el temporizador en el momento de la creación de la imagen. Usamos la Containerfile:</p>
+el temporizador en el momento de la creación de la imagen. Usamos el Containerfile:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -172,7 +205,7 @@ CMD [ "/sbin/init" ]</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Como hemos comentado <strong>bootc containers</strong> se encuentra en Technology Preview y todavía hay opciones de configuración que se están implementando. Por ese motivo hemos tenido que recurrir a:</p>
+<p>Como hemos comentado <strong>bootc containers</strong> se encuentra en <strong>Technology Preview</strong> y todavía hay opciones de configuración que se están implementando. Por ese motivo hemos tenido que recurrir a:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -226,14 +259,14 @@ $</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Abrimos una terminal y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>imagemode</strong> y creamos el contedor utilizando podman:</p>
+<p>Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>imagemode</strong>, donde creamos el contedor utilizando podman. Se proporciona un script llamado <strong>create-container.sh</strong> que se encargará de crear el contenedor con solo ejecutarlo:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@workstation ~]$ ssh demouser@imagemode
 [demouser@imagemode ~]$ sudo su -
 [root@imagemode ~]# cd image-mode
-[root@imagemode ~]# cat create-container.sh
+[root@imagemode image-mode cat create-container.sh
 #!/bin/bash
 
 podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
@@ -259,13 +292,13 @@ then
   echo "ERROR TAGEAR AL HACER PUSH"
   exit 1
 fi
-[root@imagemode ~]# bash create-container.sh
+[root@imagemode image-mode]# bash create-container.sh
 ...
-[root@imagemode ~]# podman images
+[root@imagemode image-mode]# podman images
 REPOSITORY                                    TAG         IMAGE ID       CREATED           SIZE
 localhost/rhel-bootc-vm                       latest       cc3e1af1b6a6  2 minutes ago     1.75 GB
 ...
-[root@imagemode ~]#</code></pre>
+[root@imagemode image-mode]#</code></pre>
 </div>
 </div>
 </td>
@@ -276,11 +309,21 @@ localhost/rhel-bootc-vm                       latest       cc3e1af1b6a6  2 minut
 <p>En caso de bootable containers, no vamos a ejecutar esas imágenes sobre sistemas existentes sino vamos a crear sistemas con esos contenedores ya instalados.</p>
 </div>
 <div class="paragraph">
-<p>Podemos crear sistemas de varias maneras: con imágenes para máquinas virtuales o también creando DVDs (ISO) que podemos utilizar para automáticamente instalar
+<p>Podemos crear sistemas de varias maneras:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Con imágenes para máquinas virtuales.</p>
+</li>
+<li>
+<p>También creando DVDs (ISO) que podemos utilizar para automáticamente instalar
 un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/automatically_installing_rhel/automated-installation-workflow_rhel-installer#automated-installation-workflow_rhel-installer">kickstart</a>.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Aquí vamos a utilizar <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a> para crear una VM de tipo KVM para ejecutarla en Linux utilizando <a href="https://libvirt.org">libvirt</a>.</p>
+<p>En este laboratorio nos vamos a centrar en el punto 1. Aquí vamos a utilizar <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a> para crear una VM de tipo KVM para ejecutarla en Linux utilizando <a href="https://libvirt.org">libvirt</a>.</p>
 </div>
 <div class="paragraph">
 <p>El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo <code>config.toml</code> para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a>.</p>
@@ -292,10 +335,13 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
+<div class="paragraph">
+<p>En la máquina <strong>imagemode</strong> donde ya estamos conectados y como usuario <strong>root</strong>:</p>
+</div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode ~]#  mkdir output
-image-mode # cat config.toml
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]#  mkdir output
+[root@imagemode image-mode]#  cat config.toml
 <a id="blueprint.customizations.user"></a>
 name = "demouser"
 password = "redhat"
@@ -321,6 +367,23 @@ fi
 ...
 [root@imagemode image-mode]#</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Será necesario esperar a que termine la ejecución del script para continuar con el laboratorio.</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Revisa el fichero de configuración <strong>config.toml</strong> ya que en el se define el usuario que se utilizará para conectarse a la máquina virtual que vamos a crear, además de su password y también se configura la clave pública del usuario <strong>root</strong> de la máquina <strong>imagemode</strong>. De esta forma se podrá acceder desde dicho usuario a la máquina que hemos creado por ssh con el usuario <strong>demouser</strong> sin facilitar la contraseña. Sin embargo, en la máquina que vamos a crear necesitaremos el password del usuario <strong>demouser</strong> para poder acceder al usuario <strong>root</strong>.</p>
 </div>
 </td>
 </tr>
