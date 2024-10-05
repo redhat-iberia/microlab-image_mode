@@ -347,12 +347,15 @@ Abrimos otra terminal en el portatil y nos conectamos a la máquina **imagemode*
 
 Ejecutaremos el script **bash create-container-mod.sh** que se encargará de crear la nueva version del **bootc container**. 
 
-En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
+En este caso no será necesario crear la imagen de la máquina virtual, ya que ya existe. Lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
+[imagemode@worstation ~]# ssh student@imagemode
+[student@imagemode ~]$ sudo su -
+[root@imagemode ~]# cd image-mode 
 [root@imagemode image-mode]# cat Containerfile.rhel9.4.mod 
 FROM registry.redhat.io/rhel9/rhel-bootc:9.4
 RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es tmux && /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf && /usr/bin/systemctl enable httpd
@@ -374,7 +377,9 @@ CMD [ "/sbin/init" ]
 [root@imagemode image-mode]# 
 ----
 
-Volvemos a la consola de la máquina **imagemodetest** para ver el estado del servicio **bootc-fetch-apply-updates**. Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.
+Volvemos a la sesión de la máquina **imagemodetest** donde lanzamos el comando **journalctl -f -u bootc-fetch-apply-updates**.  Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.
+
+En la consola que abrimos al lanzar **Launch VM** podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque **GRUB**. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.
 
 [.lines_7]
 [.console-input]
