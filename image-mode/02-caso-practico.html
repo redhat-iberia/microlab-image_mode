@@ -484,10 +484,7 @@ fi
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Como ejemplo hemos desplegado una apliación muy simple ya que el objetivo de este lab es ilustrar como se puede automatizar el despliegue no solo del sistema, sino que también de las aplicaciones.</p>
-</div>
-<div class="paragraph">
-<p>Como en el mundo real las aplicaciones son más complejas de instalar el <strong>Containerfile</strong> utilizado deberá contener todos los pasos para desplegar la aplicación.</p>
+<p>Como ejemplo hemos desplegado una aplicación muy simple ya que el objetivo de este lab es ilustrar el proceso necesario para crear una máquina virtual con una aplicación mediante un contenedor,</p>
 </div>
 </td>
 </tr>
@@ -510,7 +507,7 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Después de hacer login en la máquina comprobamos que el temporizador está activo:</p>
+<p>Después de hacer login en la máquina comprobamos que el temporizador está activo. En el caso de que no estemos conectados a la máquina que hemos creado, <strong>imagemodetest</strong>, nos conectamos a ella utilizando el usuario <strong>root</strong> desde la máquina <strong>imagemode</strong>:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -541,7 +538,24 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 <p>Observar que al iniciar sesión con el usuario <strong>demouser</strong> veremos un mensaje de bienvenida <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong>. Este mensaje se modificará en la actualización que haremos a continuación.</p>
 </div>
 <div class="paragraph">
-<p>Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice.</p>
+<p>Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice ya que el timer detectará que existe una versión nueva del contenedor.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Observa que en el proceso de actualización NO es necesario crear la máquina virtual a partir del contenedor que vamos a crear con los cambios. La creación de la máquina virtual a partir de un contenedor se hará ÚNICAMENTE la primera vez.</p>
+</div>
+<div class="paragraph">
+<p>Una vez creada la máquina virtual bastará con actualizar el contenedor para aplicar los cambios.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -551,7 +565,7 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 </td>
 <td class="content">
 <div class="paragraph">
-<p>En una consola de la máquina <strong>imagemodetest</strong> comprobaremos las versiones disponibles que tenemos en la máquina:</p>
+<p>En la máquina <strong>imagemodetest</strong> comprobaremos las versiones disponibles que tenemos en la máquina:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -565,10 +579,10 @@ Deployments:
 </div>
 </div>
 <div class="paragraph">
-<p>Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry <strong>registry.lab.melmac.univ:5000/rhel-bootc-vm:latest</strong>. Este es el contenedor que creamos y que utilizamos para construir la máquina virtual.</p>
+<p>Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry <strong>registry.lab.melmac.univ:5000/rhel-bootc-vm:latest</strong>. Este es el contenedor que creamos inicialmente y que hemos utilizado para construir la máquina virtual.</p>
 </div>
 <div class="paragraph">
-<p>Ahora observaremos el estado del servicio <strong>bootc-fetch-apply-updates</strong>:</p>
+<p>Ahora observaremos el estado del servicio <strong>bootc-fetch-apply-updates</strong> en la máquina <strong>imagemodetest</strong>. Este servicio se encarga de monitorizar el registry en el que se encuentra el contenedor utilizado para construir la máquina virtual:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -587,8 +601,23 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 </div>
 </div>
 <div class="paragraph">
-<p>En otra consola, en la máquina <strong>imagemode</strong>  utilizaremos el Containerfile <strong>Containerfile.rhel9.4.mod</strong> donde hemos modificado algunas cosas, como instalar el paquete <strong>tmux</strong>. Ejecutamos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>. En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
+<p>Esta sesión se quedará "bloqueada" e irá mostrando todas las notificaciones del servicio. Por este motivo deberemos abrir otra sesión a la máquina <strong>imagemode</strong>.</p>
 </div>
+<div class="paragraph">
+<p>Abrimos otra terminal en el portatil y nos conectamos a la máquina <strong>imagemode</strong>. Utilizaremos el Containerfile <strong>Containerfile.rhel9.4.mod</strong> donde hemos modificado algunas cosas, como instalar el paquete <strong>tmux</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Ejecutaremos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# cat Containerfile.rhel9.4.mod
@@ -707,9 +736,7 @@ Deployments:
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</table>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
