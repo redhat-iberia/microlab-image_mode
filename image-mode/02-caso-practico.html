@@ -259,14 +259,14 @@ $</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario <strong>demouser</strong> al host <strong>imagemode</strong>, donde creamos el contedor utilizando podman. Se proporciona un script llamado <strong>create-container.sh</strong> que se encargará de crear el contenedor con solo ejecutarlo:</p>
+<p>Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario <strong>student</strong> al host <strong>imagemode</strong>, donde creamos el contedor utilizando podman. Se proporciona un script llamado <strong>create-container.sh</strong> que se encargará de crear el contenedor con solo ejecutarlo:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@workstation ~]$ ssh demouser@imagemode
-[demouser@imagemode ~]$ sudo su -
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@workstation ~]$ ssh student@imagemode
+[student@imagemode ~]$ sudo su -
 [root@imagemode ~]# cd image-mode
-[root@imagemode image-mode cat create-container.sh
+[root@imagemode image-mode]# cat create-container.sh
 #!/bin/bash
 
 podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
@@ -641,9 +641,6 @@ CMD [ "/sbin/init" ]
 <div class="paragraph">
 <p>Volvemos a la sesión de la máquina <strong>imagemodetest</strong> donde lanzamos el comando <strong>journalctl -f -u bootc-fetch-apply-updates</strong>.  Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.</p>
 </div>
-<div class="paragraph">
-<p>En la consola que abrimos al lanzar <strong>Launch VM</strong> podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque <strong>GRUB</strong>. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.</p>
-</div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemodetest ~]# journalctl -f -u bootc-fetch-apply-updates
@@ -662,6 +659,9 @@ Connection to imagemodetest closed by remote host.
 Connection to imagemodetest closed.
 [root@imagemode image-mode]#</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>En la consola que abrimos al lanzar <strong>Launch VM</strong> podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque <strong>GRUB</strong>. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.</p>
 </div>
 <div class="paragraph">
 <p>Ha detectado que hay una actualización nueva, la ha descargado, la ha aplicado y reiniciado el servicio. Nos conectamos de nuevo en cuando haya reiniciado, veremos que el proceso de actualización es muy rápido:</p>
