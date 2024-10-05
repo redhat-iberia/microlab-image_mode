@@ -323,7 +323,7 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 </ol>
 </div>
 <div class="paragraph">
-<p>En este laboratorio nos vamos a centrar en el punto 1. Aquí vamos a utilizar <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a> para crear una VM de tipo KVM para ejecutarla en Linux utilizando <a href="https://libvirt.org">libvirt</a>.</p>
+<p>En este laboratorio nos vamos a centrar en el punto 1. Vamos a utilizar <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a> para crear una VM de tipo KVM para ejecutarla en Linux utilizando <a href="https://libvirt.org">libvirt</a>.</p>
 </div>
 <div class="paragraph">
 <p>El bootc-image-builder está diseñado para ejecutarse desde un contenedor. Creamos un archivo <code>config.toml</code> para configurar un usuario y usamos podman para ejecutar la aplicación con nuestro container. Mas información en <a href="https://github.com/osbuild/bootc-image-builder">bootc-image-builder</a>.</p>
@@ -340,15 +340,15 @@ un servidor baremetal con <a href="https://docs.redhat.com/en/documentation/red_
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]#  mkdir output
-[root@imagemode image-mode]#  cat config.toml
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# mkdir output
+[root@imagemode image-mode]# cat config.toml
 <a id="blueprint.customizations.user"></a>
 name = "demouser"
 password = "redhat"
 key = "ssh-rsa ...."
 groups = ["wheel"]
 
-[root@imagemode image-mode]#  cat creating-vm.sh
+[root@imagemode image-mode]# cat creating-vm.sh
 #!/bin/bash
 
 /usr/bin/podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t \
@@ -390,7 +390,7 @@ fi
 </table>
 </div>
 <div class="paragraph">
-<p>Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio <strong>output</strong>. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual.</p>
+<p>Cuando termine la ejecución de este script se habrá creado el disco de la máquina virtual y quedará dentro del directorio <strong>output</strong>. El script se encarga de copiar dicho disco a una unidad compartida para poder ejecutar la máquina virtual en el portátil.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -400,14 +400,14 @@ fi
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Utilizando los comandos <strong>cd</strong> y <strong>ls</strong> puedes navegar por el directorio output para ver que se ha generado.</p>
+<p>Utilizando los comandos <strong>cd</strong> y <strong>ls</strong> puedes navegar por el directorio <strong>output</strong> creado en la máquina <strong>imagemode</strong> para ver que tipo de contenido se ha generado.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior al copiar el disco creado a la carpeta compartida ha sobreescrito el disco existente y al arrancar la máquina virtual arrancará con el disco que hemos creado.</p>
+<p>En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior ha creado, como habrás visto un disco virtual para kvm llamado <strong>disk.qcow2</strong> dendro del directorio <strong>output</strong>. Ese disco ha sido copiado a una carpeta compartida sobreescribiendo el disco existente de tal forma que al arrancar la máquina virtual arrancará con el disco que hemos creado.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -447,22 +447,31 @@ fi
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Tenemos dos formas de conectarnos, nos podemos conectar por ssh utilizando las credenciales definidas en el fichero <strong>config.toml</strong>:</p>
+<p>Tenemos dos formas de conectarnos:</p>
 </div>
-<div class="listingblock lines_7 console-input">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Desde la máquina virtual <strong>imagemode</strong> con el usuario <strong>root</strong> nos podemos conectar por ssh a la máquina creadada sin utilizar password ya que hemos configurado la clave pública en el fichero <strong>config.toml</strong>. La máquina virtual se llama <strong>imagemodetest</strong>:</p>
+<div class="literalblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-[demouser@imagemodetest ~]$</code></pre>
+<pre>[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemode image-mode]# ssh demouser@imagemodetest
+[demouser@imagemodetest ~]$
+----</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Como en el fichero de configuración <strong>config.toml</strong> hemos incluido la clave pública no nos pedirá contraseña.</p>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>La otra forma de conectarnos es a través de la consola que hemos abierto con <strong>Launch VM</strong>. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero <strong>config.toml</strong>.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Desde el portátil, abre una pestaña del navegador y conectate a (A la máquina que acabas de creat)[<a href="https://imagemodetest.lab.melmac.univ" class="bare">https://imagemodetest.lab.melmac.univ</a>] para comprobar sí la aplicación funciona correctamente.</p>
+<p>Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de crear: [<a href="https://imagemodetest.lab.melmac.univ" class="bare">https://imagemodetest.lab.melmac.univ</a>] para comprobar sí la aplicación funciona correctamente.</p>
 </div>
 </td>
 </tr>
