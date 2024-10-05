@@ -12,6 +12,21 @@ Veremos cómo bootc aprovecha la tecnología de contenedores existente para:
 * Acceder automáticamente al registro de imágenes del contenedor desplegado para automáticamente actualizar el sistema.
 * Revertir el último cambio.
 
+La infraestructura que utilizarás para esta laboratorio es la siguiente:
+
+image::diagram.png[]
+
+* Un portátil con Red Hat Enterprise Linux 9.4
+* Una máquina virtual con Red Hat Enterprise Linux 9.4 y hostname **imagemode** que utilizarás para el laboratorio.
+* Una máquina virtual con hostname **imagemodetest** que crearás.
+
+[IMPORTANT]
+====
+Una vez que termines el laboratorio es MUY importante que cierres sesión para que se resetee el entorno y el siguiente usuario pueda utilizarlo.
+
+Muchas gracias!!!
+====
+
 [#crear-images]
 == Creación de la primera imagen
 
@@ -521,7 +536,7 @@ Por simplicidad se ha instalado un registry local y solo se mantiene una copia d
 
 En un sistema en producción en el registry se encontrarán varias imágenes del contenedor tageadas con su versión correspondiente, por ejemplo **v1**, **v2**, ... y se utilizaría el tag **latest** para "apuntar" a la versión que es necesario ejecutar en producción. 
 
-Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag **latest** para que apuntará a la versión del contenedor que se va a hacer rollback para que, de esta forma, la información del registry sea congruente con la configuración en producción.
+Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag **latest** para que apuntará a la versión del contenedor que se va a hacer rollback. De de esta forma, la información del registry sea congruente con la configuración en producción.
 =====
 
 [NOTE]
