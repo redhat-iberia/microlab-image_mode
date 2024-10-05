@@ -453,25 +453,24 @@ fi
 <ol class="arabic">
 <li>
 <p>Desde la máquina virtual <strong>imagemode</strong> con el usuario <strong>root</strong> nos podemos conectar por ssh a la máquina creadada sin utilizar password ya que hemos configurado la clave pública en el fichero <strong>config.toml</strong>. La máquina virtual se llama <strong>imagemodetest</strong>:</p>
-<div class="literalblock">
-<div class="content">
-<pre>[.lines_7]
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-[root@imagemode image-mode]# ssh demouser@imagemodetest
-[demouser@imagemodetest ~]$
-----</pre>
-</div>
-</div>
 </li>
+</ol>
+</div>
+<div class="listingblock lines_7 console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
+[demouser@imagemodetest ~]$</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>La otra forma de conectarnos es a través de la consola que hemos abierto con <strong>Launch VM</strong>. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero <strong>config.toml</strong>.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de crear: [<a href="https://imagemodetest.lab.melmac.univ" class="bare">https://imagemodetest.lab.melmac.univ</a>] para comprobar sí la aplicación funciona correctamente.</p>
+<p>Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de crear[<a href="https://imagemodetest.lab.melmac.univ" class="bare">https://imagemodetest.lab.melmac.univ</a>] para comprobar sí la aplicación funciona correctamente.</p>
 </div>
 </td>
 </tr>
