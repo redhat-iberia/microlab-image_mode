@@ -123,6 +123,44 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>La infraestructura que utilizarás para esta laboratorio es la siguiente:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/diagram.png" alt="diagram">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un portátil con Red Hat Enterprise Linux 9.4</p>
+</li>
+<li>
+<p>Una máquina virtual con Red Hat Enterprise Linux 9.4 y hostname <strong>imagemode</strong> que utilizarás para el laboratorio.</p>
+</li>
+<li>
+<p>Una máquina virtual con hostname <strong>imagemodetest</strong> que crearás.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Una vez que termines el laboratorio es MUY importante que cierres sesión para que se resetee el entorno y el siguiente usuario pueda utilizarlo.</p>
+</div>
+<div class="paragraph">
+<p>Muchas gracias!!!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -790,7 +828,7 @@ Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
 <p>En un sistema en producción en el registry se encontrarán varias imágenes del contenedor tageadas con su versión correspondiente, por ejemplo <strong>v1</strong>, <strong>v2</strong>, &#8230;&#8203; y se utilizaría el tag <strong>latest</strong> para "apuntar" a la versión que es necesario ejecutar en producción.</p>
 </div>
 <div class="paragraph">
-<p>Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag <strong>latest</strong> para que apuntará a la versión del contenedor que se va a hacer rollback para que, de esta forma, la información del registry sea congruente con la configuración en producción.</p>
+<p>Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag <strong>latest</strong> para que apuntará a la versión del contenedor que se va a hacer rollback. De de esta forma, la información del registry sea congruente con la configuración en producción.</p>
 </div>
 </td>
 </tr>
