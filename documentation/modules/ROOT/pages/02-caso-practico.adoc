@@ -236,7 +236,7 @@ Ahora podemos conectarnos a la máquina virtual que hemos creado y explorar.
 =====
 Tenemos dos formas de conectarnos: 
 
-1. Desde la máquina virtual **imagemode** con el usuario **root** nos podemos conectar por ssh a la máquina creadada sin utilizar password ya que hemos configurado la clave pública en el fichero **config.toml**. La máquina virtual se llama **imagemodetest**:
+* Desde la máquina virtual **imagemode** con el usuario **root** nos podemos conectar por ssh a la máquina creadada sin utilizar password ya que hemos configurado la clave pública en el fichero **config.toml**. La máquina virtual que hemos creado se llama **imagemodetest**:
 
 [.lines_7]
 [.console-input]
@@ -246,9 +246,9 @@ Tenemos dos formas de conectarnos:
 [demouser@imagemodetest ~]$ 
 ----
 
-2. La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
+* La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
 
-Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de crear[https://imagemodetest.lab.melmac.univ] para comprobar sí la aplicación funciona correctamente.
+Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de https://imagemodetest.lab.melmac.univ[crear] para comprobar sí la aplicación funciona correctamente.
 =====
 
 [IMPORTANT]
