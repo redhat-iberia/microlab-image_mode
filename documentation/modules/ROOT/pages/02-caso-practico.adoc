@@ -427,7 +427,7 @@ Deployments:
 [root@imagemodetest ~]# 
 ----
 
-Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada.
+Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada. Cada una de estas versiones se corresponde con una entrada en el gestor de arranque **GRUB**, con lo cual podemos arrancar la versión que consideremos.
 
 Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.
 
@@ -449,7 +449,7 @@ El sistema reiniciará y veremos que nos encontramos en la versión previa:
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-[root@imagemode ~]# ssh demouser@imagemodetest
+[root@imagemode image-mode]# ssh demouser@imagemodetest
 Bienvenido a una maquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ rpm-ostree status
@@ -467,6 +467,20 @@ Deployments:
 
 Podemos ver que el mensaje de bienvenida vuelve a mostrar **Bienvenido a una maquina desplegada con bootc-container-vm v1** y que la versión activa es la primera que instalamos.
 
+Si esperamos un poco veremos que la máquina se reinicia y una vez reiniciada si nos conectamos:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v2
+Last login: Fri Oct  4 10:47:28 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$
+----
+
+Vemos que el mensaje de bienvenida ha cambiado siendo **Bienvenido a una maquina desplegada con bootc-container-vm v2**. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla. 
+
 Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:
 
 [.lines_7]
@@ -475,6 +489,39 @@ Si queremos evitar que el sistema se auto-actualice de nuevo a la versión erró
 ----
 [root@imagemodetest ~]# systemctl disable --now bootc-fetch-apply-updates.timer
 ----
+
+Una vez desactivado podemos proceder a realizar el rollback y veremos que esta vez no se autoactualiza:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemodetest ~]# bootc rollback
+bootfs is sufficient for calculated new size: 0 bytes
+Next boot: rollback deployment
+[root@imagemodetest ~]#  reboot
+----
+
+Y una vez que la máquina **imagemodetest** haya iniciado:
+
+[.lines_7]
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+[root@imagemode image-mode]# ssh demouser@imagemodetest
+Bienvenido a una maquina desplegada con bootc-container-vm v1
+Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
+[demouser@imagemodetest ~]$
+----
+=====
+
+[IMPORTANT]
+=====
+Por simplicidad se ha instalado un registry local y solo se mantiene una copia de la imagen del contenedor con el tag **latest**. 
+
+En un sistema en producción en el registry se encontrarán varias imágenes del contenedor tageadas con su versión correspondiente, por ejemplo **v1**, **v2**, ... y se utilizaría el tag **latest** para "apuntar" a la versión que es necesario ejecutar en producción. 
+
+Si se decidiera utilizar el timer para la autoactualización entonces al hacer el rollback se cambiaría en el registry el tag **latest** para que apuntará a la versión del contenedor que se va a hacer rollback para que, de esta forma, la información del registry sea congruente con la configuración en producción.
 =====
 
 [NOTE]
