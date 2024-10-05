@@ -347,10 +347,7 @@ Abrimos otra terminal en el portatil y nos conectamos a la máquina **imagemode*
 
 Ejecutaremos el script **bash create-container-mod.sh** que se encargará de crear la nueva version del **bootc container**. 
 
-[IMPORTANT]
-=====
 En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
-=====
 
 [.lines_7]
 [.console-input]
