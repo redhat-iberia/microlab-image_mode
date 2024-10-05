@@ -253,9 +253,7 @@ Desde el portátil, abre una pestaña del navegador y conectate a la máquina qu
 
 [IMPORTANT]
 ====
-Como ejemplo hemos desplegado una apliación muy simple ya que el objetivo de este lab es ilustrar como se puede automatizar el despliegue no solo del sistema, sino que también de las aplicaciones.
-
-Como en el mundo real las aplicaciones son más complejas de instalar el **Containerfile** utilizado deberá contener todos los pasos para desplegar la aplicación.
+Como ejemplo hemos desplegado una aplicación muy simple ya que el objetivo de este lab es ilustrar el proceso necesario para crear una máquina virtual con una aplicación mediante un contenedor,
 ====
 
 [#update-rollback]
@@ -266,7 +264,7 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 
 [TIP]
 =====
-Después de hacer login en la máquina comprobamos que el temporizador está activo:
+Después de hacer login en la máquina comprobamos que el temporizador está activo. En el caso de que no estemos conectados a la máquina que hemos creado, **imagemodetest**, nos conectamos a ella utilizando el usuario **root** desde la máquina **imagemode**:
 
 [.lines_7]
 [.console-input]
@@ -294,12 +292,19 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 
 Observar que al iniciar sesión con el usuario **demouser** veremos un mensaje de bienvenida **Bienvenido a una maquina desplegada con bootc-container-vm v1**. Este mensaje se modificará en la actualización que haremos a continuación.
 
-Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice. 
+Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice ya que el timer detectará que existe una versión nueva del contenedor. 
+
+[IMPORTANT]
+=====
+Observa que en el proceso de actualización NO es necesario crear la máquina virtual a partir del contenedor que vamos a crear con los cambios. La creación de la máquina virtual a partir de un contenedor se hará ÚNICAMENTE la primera vez.
+
+Una vez creada la máquina virtual bastará con actualizar el contenedor para aplicar los cambios.
+=====
 
 [TIP]
 =====
 
-En una consola de la máquina **imagemodetest** comprobaremos las versiones disponibles que tenemos en la máquina:
+En la máquina **imagemodetest** comprobaremos las versiones disponibles que tenemos en la máquina:
 
 [.lines_7]
 [.console-input]
@@ -314,9 +319,9 @@ Deployments:
 [root@imagemodetest ~]# 
 ----
 
-Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry **registry.lab.melmac.univ:5000/rhel-bootc-vm:latest**. Este es el contenedor que creamos y que utilizamos para construir la máquina virtual.
+Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry **registry.lab.melmac.univ:5000/rhel-bootc-vm:latest**. Este es el contenedor que creamos inicialmente y que hemos utilizado para construir la máquina virtual.
 
-Ahora observaremos el estado del servicio **bootc-fetch-apply-updates**:
+Ahora observaremos el estado del servicio **bootc-fetch-apply-updates** en la máquina **imagemodetest**. Este servicio se encarga de monitorizar el registry en el que se encuentra el contenedor utilizado para construir la máquina virtual:
 
 [.lines_7]
 [.console-input]
@@ -336,8 +341,17 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 ...
 ----
 
-En otra consola, en la máquina **imagemode**  utilizaremos el Containerfile **Containerfile.rhel9.4.mod** donde hemos modificado algunas cosas, como instalar el paquete **tmux**. Ejecutamos el script **bash create-container-mod.sh** que se encargará de crear la nueva version del **bootc container**. En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
- 
+Esta sesión se quedará "bloqueada" e irá mostrando todas las notificaciones del servicio. Por este motivo deberemos abrir otra sesión a la máquina **imagemode**.
+
+Abrimos otra terminal en el portatil y nos conectamos a la máquina **imagemode**. Utilizaremos el Containerfile **Containerfile.rhel9.4.mod** donde hemos modificado algunas cosas, como instalar el paquete **tmux**. 
+
+Ejecutaremos el script **bash create-container-mod.sh** que se encargará de crear la nueva version del **bootc container**. 
+
+[IMPORTANT]
+=====
+En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:
+=====
+
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
