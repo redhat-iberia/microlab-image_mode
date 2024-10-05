@@ -610,11 +610,14 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 <p>Ejecutaremos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>.</p>
 </div>
 <div class="paragraph">
-<p>En este caso no será necesario crear la imagen de la máquina virtual ya que ya existe y lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
+<p>En este caso no será necesario crear la imagen de la máquina virtual, ya que ya existe. Lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# cat Containerfile.rhel9.4.mod
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[imagemode@worstation ~]# ssh student@imagemode
+[student@imagemode ~]$ sudo su -
+[root@imagemode ~]# cd image-mode
+[root@imagemode image-mode]# cat Containerfile.rhel9.4.mod
 FROM registry.redhat.io/rhel9/rhel-bootc:9.4
 RUN /usr/bin/dnf -y install firewalld httpd php mod_ssl langpacks-es tmux &amp;&amp; /usr/bin/rm -f /etc/httpd/conf.d/welcome.conf &amp;&amp; /usr/bin/systemctl enable httpd
 COPY bootc-fetch-apply-updates.timer /lib/systemd/system/
@@ -636,7 +639,10 @@ CMD [ "/sbin/init" ]
 </div>
 </div>
 <div class="paragraph">
-<p>Volvemos a la consola de la máquina <strong>imagemodetest</strong> para ver el estado del servicio <strong>bootc-fetch-apply-updates</strong>. Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.</p>
+<p>Volvemos a la sesión de la máquina <strong>imagemodetest</strong> donde lanzamos el comando <strong>journalctl -f -u bootc-fetch-apply-updates</strong>.  Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.</p>
+</div>
+<div class="paragraph">
+<p>En la consola que abrimos al lanzar <strong>Launch VM</strong> podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque <strong>GRUB</strong>. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
