@@ -110,16 +110,16 @@ $
 
 [TIP]
 =====
-Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario **demouser** al host **imagemode**, donde creamos el contedor utilizando podman. Se proporciona un script llamado **create-container.sh** que se encargará de crear el contenedor con solo ejecutarlo:
+Abrimos una terminal en el portátil y nos conectamos por ssh con el usuario **student** al host **imagemode**, donde creamos el contedor utilizando podman. Se proporciona un script llamado **create-container.sh** que se encargará de crear el contenedor con solo ejecutarlo:
 
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-[imagemode@workstation ~]$ ssh demouser@imagemode
-[demouser@imagemode ~]$ sudo su -
+[imagemode@workstation ~]$ ssh student@imagemode
+[student@imagemode ~]$ sudo su -
 [root@imagemode ~]# cd image-mode
-[root@imagemode image-mode cat create-container.sh
+[root@imagemode image-mode]# cat create-container.sh
 #!/bin/bash
 
 podman build -f Containerfile.rhel9.4 -t rhel-bootc-vm:latest .
@@ -379,8 +379,6 @@ CMD [ "/sbin/init" ]
 
 Volvemos a la sesión de la máquina **imagemodetest** donde lanzamos el comando **journalctl -f -u bootc-fetch-apply-updates**.  Veremos que encuentra la actualización, descarga los datos y reinicia el sistema para actualizarlo.
 
-En la consola que abrimos al lanzar **Launch VM** podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque **GRUB**. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.
-
 [.lines_7]
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -401,6 +399,8 @@ Connection to imagemodetest closed by remote host.
 Connection to imagemodetest closed.
 [root@imagemode image-mode]# 
 ----
+
+En la consola que abrimos al lanzar **Launch VM** podremos ver el reinicio, podremos ver que ahora existen dos entradas en el gestor de arranque **GRUB**. La opción seleccionada corresponde a la actualización, mientras que la otra corresponde a la máquina virtual que creamos originalmente.
 
 Ha detectado que hay una actualización nueva, la ha descargado, la ha aplicado y reiniciado el servicio. Nos conectamos de nuevo en cuando haya reiniciado, veremos que el proceso de actualización es muy rápido:
 
