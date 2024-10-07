@@ -7,6 +7,8 @@
 
 Microlab de RHEL Image Mode para Summit Connect Madrid 2024
 
+image::connect.png[]
+
 RHEL image mode para Red Hat Enterprise Linux (RHEL) es un nuevo método de despliegue que utiliza una aproximación de contenedores para gestionar el sistema operativo mediante contenedores.
 
 Actualmente se encuentra como Technology Preview, es decir que no está soportado para producción, pero se puede empezar a utilizar para irse familiarizando con image mode y ver no solo como encaja sino también qué soluciones ofrece a los clientes sobre las problematicas que sufren hoy en día.
