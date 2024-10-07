@@ -617,7 +617,7 @@ Deployments:
 </div>
 </div>
 <div class="paragraph">
-<p>Vemos que tenemos únicamente una versión disponible en la máquina y que se encuentra en el registry <strong>registry.lab.melmac.univ:5000/rhel-bootc-vm:latest</strong>. Este es el contenedor que creamos inicialmente y que hemos utilizado para construir la máquina virtual.</p>
+<p>Vemos que tenemos únicamente una versión disponible en la máquina (<strong>Version: 9.20240930.0 (2024-10-04T09:19:28Z)</strong>) y que se encuentra en el registry <strong>registry.lab.melmac.univ:5000/rhel-bootc-vm:latest</strong>. Este es el contenedor que creamos inicialmente y que hemos utilizado para construir la máquina virtual.</p>
 </div>
 <div class="paragraph">
 <p>Ahora observaremos el estado del servicio <strong>bootc-fetch-apply-updates</strong> en la máquina <strong>imagemodetest</strong>. Este servicio se encarga de monitorizar el registry en el que se encuentra el contenedor utilizado para construir la máquina virtual:</p>
@@ -648,7 +648,13 @@ Oct 04 09:41:29 imagemodetest.lab.melmac.univ systemd[1]: Finished Apply bootc u
 <p>Ejecutaremos el script <strong>bash create-container-mod.sh</strong> que se encargará de crear la nueva version del <strong>bootc container</strong>.</p>
 </div>
 <div class="paragraph">
-<p>En este caso no será necesario crear la imagen de la máquina virtual, ya que ya existe. Lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones:</p>
+<p>En este caso no será necesario crear la imagen de la máquina virtual, ya que ya existe. Lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones.</p>
+</div>
+<div class="paragraph">
+<p>Antes de crear la imágen actualizada sería interesante poner en primer plano la consola que hemos abierto con <strong>Launch VM</strong> y la shell de SSH para poder ver el reinicio de la máquina.</p>
+</div>
+<div class="paragraph">
+<p>Una vez que tenemos en primer plano ambas procedemos en la consola de SSH:</p>
 </div>
 <div class="listingblock lines_7 console-input">
 <div class="content">
@@ -726,7 +732,7 @@ Deployments:
 </div>
 </div>
 <div class="paragraph">
-<p>Ahora vemos que tenemos dos versiones disponibles, la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada. Cada una de estas versiones se corresponde con una entrada en el gestor de arranque <strong>GRUB</strong>, con lo cual podemos arrancar la versión que consideremos.</p>
+<p>Ahora vemos que tenemos dos versiones disponibles (podemos utilizar la hora para distinguir las dos versiones), la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada. Cada una de estas versiones se corresponde con una entrada en el gestor de arranque <strong>GRUB</strong>, con lo cual podemos arrancar la versión que consideremos.</p>
 </div>
 <div class="paragraph">
 <p>Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.</p>
