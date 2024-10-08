@@ -31,6 +31,7 @@ El objetivo de este lab es empezar a familiarizarse con RHEL Image Mode:
 * xref:02-caso-practico.adoc#descripcion[Descripción]
 * xref:02-caso-practico.adoc#crear-images[Creación de la primera imagen]
 * xref:02-caso-practico.adoc#update-rollback[Actualización y rollback]
+* xref:02-caso-practico.adoc#next[Siguientes pasos]
 
 [.tile]
 .xref:03-resources.adoc[Recursos]
