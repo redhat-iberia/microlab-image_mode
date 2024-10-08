@@ -232,7 +232,7 @@ Cuando termine la ejecución de este script se habrá creado el disco de la máq
 Utilizando los comandos **cd** y **ls** puedes navegar por el directorio **output** creado en la máquina **imagemode** para ver que tipo de contenido se ha generado.
 =====
 
-En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior ha creado, como habrás visto un disco virtual para kvm llamado **disk.qcow2** dendro del directorio **output**. Ese disco ha sido copiado a una carpeta compartida sobreescribiendo el disco existente de tal forma que al arrancar la máquina virtual arrancará con el disco que hemos creado.
+El script anterior ha creado, como habrás visto, un disco virtual para kvm llamado **disk.qcow2**, dentro del directorio **output**. En el portátil ya se encuentra definida una máquina virtual para ejecutarse desde este archivo después de copmarlo a una carpeta compartida, sobreescribiendo el archivo existente.
 
 [TIP]
 =====
@@ -286,7 +286,7 @@ Después de hacer login en la máquina comprobamos que el temporizador está act
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser: 
 Last login: Fri Oct  4 09:24:32 UTC 2024 on pts/0
@@ -430,7 +430,7 @@ Ha detectado que hay una actualización nueva, la ha descargado, la ha aplicado 
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v2
+Bienvenido a una máquina desplegada con bootc-container-vm v2
 Last login: Fri Oct  4 10:07:25 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser: 
@@ -471,7 +471,7 @@ El sistema reiniciará y veremos que nos encontramos en la versión previa:
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ rpm-ostree status
 State: idle
@@ -486,7 +486,7 @@ Deployments:
 [demouser@imagemodetest ~]$
 ----
 
-Podemos ver que el mensaje de bienvenida vuelve a mostrar **Bienvenido a una maquina desplegada con bootc-container-vm v1** y que la versión activa es la primera que instalamos.
+Podemos ver que el mensaje de bienvenida vuelve a mostrar **Bienvenido a una máquina desplegada con bootc-container-vm v1** y que la versión activa es la primera que instalamos.
 
 Si esperamos un poco veremos que la máquina se reinicia y una vez reiniciada si nos conectamos:
 
@@ -495,12 +495,12 @@ Si esperamos un poco veremos que la máquina se reinicia y una vez reiniciada si
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v2
+Bienvenido a una máquina desplegada con bootc-container-vm v2
 Last login: Fri Oct  4 10:47:28 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$
 ----
 
-Vemos que el mensaje de bienvenida ha cambiado siendo **Bienvenido a una maquina desplegada con bootc-container-vm v2**. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla. 
+Vemos que el mensaje de bienvenida ha cambiado siendo **Bienvenido a una máquina desplegada con bootc-container-vm v2**. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla. 
 
 Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:
 
@@ -530,7 +530,7 @@ Y una vez que la máquina **imagemodetest** haya iniciado:
 [source,bash,subs="+macros,+attributes"]
 ----
 [root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$
 ----
@@ -549,6 +549,8 @@ Si se decidiera utilizar el timer para la autoactualización entonces al hacer e
 =====
 Se puede detectar si la actualización no funciona de forma correcta y realizar el rollback de forma autómatica. Este método se hace utilizando https://github.com/fedora-iot/greenboot[greenboot] que es el mismo mecanismo que utiliza la versión de RHEL para Edge. En estos momentos esta funcionalidad se está integrando con los contenedores **bootc** y estará disponible en el futuro. 
 =====
+
+image::graduation.png[]
 
 [#conclusriones]
 == Conclusiones
