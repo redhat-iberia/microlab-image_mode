@@ -22,7 +22,9 @@ image::diagram.png[]
 
 [IMPORTANT]
 ====
-Para el laboratorio utilizar usuario **student** y password **redhat** para acceder a la máquina **imagemode**.
+Para el laboratorio utilizar usuario **student** y password **redhat** para acceder a la máquina **imagemode** utilizando ssh desde el portátil.
+
+Para acceder a la máquina **image-mode-test**, una vez la hayamos creado, podemos conectarnos a ella por ssh con el usuario **root** desde la máquina **imagemode**, con usuario **demouser** y password **redhat**.
 ====
 
 [IMPORTANT]
