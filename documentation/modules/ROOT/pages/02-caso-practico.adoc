@@ -22,6 +22,11 @@ image::diagram.png[]
 
 [IMPORTANT]
 ====
+Para el laboratorio utilizar usuario **student** y password **redhat** para acceder a la máquina **imagemode**.
+====
+
+[IMPORTANT]
+====
 Una vez que termines el laboratorio es MUY importante que cierres sesión para que se resetee el entorno y el siguiente usuario pueda utilizarlo.
 
 Muchas gracias!!!
