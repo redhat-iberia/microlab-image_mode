@@ -16,7 +16,7 @@ La infraestructura que utilizarás para esta laboratorio es la siguiente:
 
 image::diagram.png[]
 
-* Un portátil con Red Hat Enterprise Linux 9.4.
+* Un portátil con Red Hat Enterprise Linux 9.4 como workstation.
 * Una máquina virtual con Red Hat Enterprise Linux 9.4 y hostname **imagemode** que utilizarás para el laboratorio.
 * Una máquina virtual con hostname **imagemodetest** que crearás.
 
@@ -563,9 +563,8 @@ image::graduation.png[]
 Hemos visto:
 
 * Como crear una máquina virtual a partir de un contenedor.
-* El proceso de actualizar es tan sencillo como recrear el contenedor a partir del que hemos creado la máquina virtual.
+* El proceso de actualizar es tan sencillo como recrear el contenedor con las actualizaciones necesarios a partir del que hemos creado la máquina virtual.
 * La actualización se puede hacer de forma automática, aunque también se puede lanzar de forma manual mediante automatismos.
-* El proceso de actualización es muy rápido.
+* El proceso de actualización es muy rápido y sencillo.
 * El proceso de marcha atrás es muy rápido y sencillo.
-* Existe una forma automática de detectar si la actualización no funciona correctamente de forma automática y hacer el rollback automático a la versión anterior y tener el sistema funcional.
 
