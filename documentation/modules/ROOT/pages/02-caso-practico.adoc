@@ -207,7 +207,7 @@ groups = ["wheel"]
 
 if [ $? -ne 0 ]
 then
-  echo "Ocurrio un error creando la VM"
+  echo "Ocurrió un error creando la VM"
   exit 1
 fi
 
@@ -236,7 +236,7 @@ El script anterior ha creado, como habrás visto, un disco virtual para kvm llam
 
 [TIP]
 =====
-Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portátil vamos al launcher situado abajo y pinchamos en **Launch VM**:
+Para arrancar la máquina virtual con el disco creado en el entorno gráfico del portátil vamos al launcher situado abajo y pinchamos en **Launch VM** que arrancará la máquina virtual **image-mode-test** utilizando el el disco que contiene la máquina virtual que hemos creado:
 
 image::launchvm.png[]
 
@@ -263,12 +263,12 @@ Tenemos dos formas de conectarnos:
 
 * La otra forma de conectarnos es a través de la consola que hemos abierto con **Launch VM**. En este caso si nos pedirá constraseña. El usuario y la contraseña los tenemos en el fichero **config.toml**.
 
-Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de https://imagemodetest.lab.melmac.univ[crear] para comprobar sí la aplicación funciona correctamente.
+Desde el portátil, abre una pestaña del navegador y conectate a la máquina que acabas de https://imagemodetest.lab.melmac.univ[crear] para comprobar si la aplicación funciona correctamente.
 =====
 
 [IMPORTANT]
 ====
-Como ejemplo hemos desplegado una aplicación muy simple ya que el objetivo de este lab es ilustrar el proceso necesario para crear una máquina virtual con una aplicación mediante un contenedor,
+Como ejemplo hemos desplegado una aplicación muy simple ya que el objetivo de este lab es ilustrar el proceso necesario para crear una máquina virtual con una aplicación mediante un contenedor.
 ====
 
 [#update-rollback]
