@@ -569,6 +569,5 @@ Hemos visto:
 * El proceso de marcha atrás es muy rápido y sencillo.
 
 Si deseas conocer más nos puedes preguntar durante el evento o bien puedes hablar con el equipo de cuenta de Red Hat en tu empresa y pedirles una sesión con los especialistas de RHEL.
-graduation
 
 image::graduation.png[]
