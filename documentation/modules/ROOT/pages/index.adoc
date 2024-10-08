@@ -13,6 +13,12 @@ Actualmente se encuentra como Technology Preview, es decir que no está soportad
 
 RHEL image mode sigue una metodología GitOps y CI/CD para gestionar desde las aplicaciones desplegadas hasta el propio sistema operativo.
 
+El objetivo de este lab es empezar a familiarizarse con RHEL Image Mode:
+
+1. Crear una máquina virtual a partir de la imagen de un contenedor.
+2. Realizar una actualización de la máquina virtual.
+3. Realizar un rollback manual.
+
 [.tiles.browse]
 == Contenido
 
