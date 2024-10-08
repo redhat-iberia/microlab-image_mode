@@ -305,7 +305,7 @@ Oct 04 09:23:58 imagemodetest.lab.melmac.univ systemd[1]: Started Apply bootc up
 ----
 =====
 
-Observar que al iniciar sesión con el usuario **demouser** veremos un mensaje de bienvenida **Bienvenido a una maquina desplegada con bootc-container-vm v1**. Este mensaje se modificará en la actualización que haremos a continuación.
+Observar que al iniciar sesión con el usuario **demouser** veremos un mensaje de bienvenida **Bienvenido a una máquina desplegada con bootc-container-vm v1**. Este mensaje se modificará en la actualización que haremos a continuación.
 
 Ahora vamos a crear una nueva imagen y subirla al registro. Eso hará que el sistema se autoactualice ya que el timer detectará que existe una versión nueva del contenedor. 
 
@@ -364,7 +364,9 @@ Ejecutaremos el script **bash create-container-mod.sh** que se encargará de cre
 
 En este caso no será necesario crear la imagen de la máquina virtual, ya que ya existe. Lo único que nos interesa es actualizar la máquina virtual con las nuevas modificaciones.
 
-Antes de crear la imágen actualizada sería interesante poner en primer plano la consola que hemos abierto con **Launch VM** y la shell de SSH para poder ver el reinicio de la máquina. 
+Antes de crear la imágen actualizada sería interesante poner en primer plano la consola que hemos abierto con **Launch VM** y la shell de SSH para poder ver el reinicio de la máquina:
+
+image::console.png[]
 
 Una vez que tenemos en primer plano ambas procedemos en la consola de SSH:
 
