@@ -445,7 +445,7 @@ fi
 </table>
 </div>
 <div class="paragraph">
-<p>En el portátil ya se encuentra creada una máquina virtual para ejecutar la máquina que hemos creado. El script anterior ha creado, como habrás visto un disco virtual para kvm llamado <strong>disk.qcow2</strong> dendro del directorio <strong>output</strong>. Ese disco ha sido copiado a una carpeta compartida sobreescribiendo el disco existente de tal forma que al arrancar la máquina virtual arrancará con el disco que hemos creado.</p>
+<p>El script anterior ha creado, como habrás visto, un disco virtual para kvm llamado <strong>disk.qcow2</strong>, dentro del directorio <strong>output</strong>. En el portátil ya se encuentra definida una máquina virtual para ejecutarse desde este archivo después de copmarlo a una carpeta compartida, sobreescribiendo el archivo existente.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -550,7 +550,7 @@ Ese servicio, si detecta que una nueva imagen está disponible, la descarga y re
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser:
 Last login: Fri Oct  4 09:24:32 UTC 2024 on pts/0
@@ -718,7 +718,7 @@ Connection to imagemodetest closed.
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v2
+Bienvenido a una máquina desplegada con bootc-container-vm v2
 Last login: Fri Oct  4 10:07:25 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ sudo su -
 [sudo] password for demouser:
@@ -759,7 +759,7 @@ Next boot: rollback deployment
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:45:15 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$ rpm-ostree status
 State: idle
@@ -775,7 +775,7 @@ Deployments:
 </div>
 </div>
 <div class="paragraph">
-<p>Podemos ver que el mensaje de bienvenida vuelve a mostrar <strong>Bienvenido a una maquina desplegada con bootc-container-vm v1</strong> y que la versión activa es la primera que instalamos.</p>
+<p>Podemos ver que el mensaje de bienvenida vuelve a mostrar <strong>Bienvenido a una máquina desplegada con bootc-container-vm v1</strong> y que la versión activa es la primera que instalamos.</p>
 </div>
 <div class="paragraph">
 <p>Si esperamos un poco veremos que la máquina se reinicia y una vez reiniciada si nos conectamos:</p>
@@ -783,13 +783,13 @@ Deployments:
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v2
+Bienvenido a una máquina desplegada con bootc-container-vm v2
 Last login: Fri Oct  4 10:47:28 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Vemos que el mensaje de bienvenida ha cambiado siendo <strong>Bienvenido a una maquina desplegada con bootc-container-vm v2</strong>. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla.</p>
+<p>Vemos que el mensaje de bienvenida ha cambiado siendo <strong>Bienvenido a una máquina desplegada con bootc-container-vm v2</strong>. Lo que ha pasado es que el timer sigue activo y ha detectado que en el registry existe una nueva versión ya que al hacer el rollback hemos vuelto a la antigua, y procede a actualizarla.</p>
 </div>
 <div class="paragraph">
 <p>Si queremos evitar que el sistema se auto-actualice de nuevo a la versión errónea, debemos deshabilitar el temporizador:</p>
@@ -816,7 +816,7 @@ Next boot: rollback deployment
 <div class="listingblock lines_7 console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@imagemode image-mode]# ssh demouser@imagemodetest
-Bienvenido a una maquina desplegada con bootc-container-vm v1
+Bienvenido a una máquina desplegada con bootc-container-vm v1
 Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
 [demouser@imagemodetest ~]$</code></pre>
 </div>
@@ -858,6 +858,11 @@ Last login: Fri Oct  4 10:52:53 2024 from 192.168.122.202
 </td>
 </tr>
 </table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/graduation.png" alt="graduation">
+</div>
 </div>
 </div>
 </div>
