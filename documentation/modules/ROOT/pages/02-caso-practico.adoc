@@ -457,6 +457,8 @@ Deployments:
 
 Ahora vemos que tenemos dos versiones disponibles (podemos utilizar la hora para distinguir las dos versiones), la antigua generada cuando creamos la máquina virtual y la nueva que hemos creado que vemos que es la seleccionada. Cada una de estas versiones se corresponde con una entrada en el gestor de arranque **GRUB**, con lo cual podemos arrancar la versión que consideremos.
 
+image::imagemodetest-upgraded.png[]
+
 Después del reinicio, hacemos login y comprobamos que efectivamente, el sistema ha sido actualizado.
 
 Si encontramos problemas con esta actualización podemos revertirla sin problema. Manualmente lo conseguimos ejecutando:
